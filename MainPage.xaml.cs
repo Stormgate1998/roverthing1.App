@@ -24,11 +24,13 @@ public partial class MainPage : ContentPage
 
 public partial class JoinViewModel : ObservableObject
 {
+    private readonly INavigationService navigation;
 
-    private static HttpClient client;
-    private void JoinGame(HttpClient _client)
+    private readonly HttpClient client;
+    public JoinViewModel(INavigationService navigation, HttpClient _client)
     {
-        client = _client;
+        this.navigation= navigation;
+        this.client = _client;
     }
 
     [ObservableProperty]
@@ -46,9 +48,10 @@ public partial class JoinViewModel : ObservableObject
     [RelayCommand]
     public async Task EnterData()
     {
+        JoinObject response = new JoinObject();
         try
         {
-            JoinObject response = await client.GetAsync($"http://snow-rover-pr-7.azurewebsites.net/Game/Join?gameId={Gameid}&name={Name}");
+            response = await client.GetAsync($"http://snow-rover-pr-7.azurewebsites.net/Game/Join?gameId={Gameid}&name={Name}");
             token = response.token;
             
         }
@@ -57,6 +60,8 @@ public partial class JoinViewModel : ObservableObject
             Console.WriteLine("\nException Caught!");
             Console.WriteLine("Message :{0} ", e.Message);
         }
+
+        await navigation.NavigateToAsync($"{nameof(PlayGame)}?orientation={response.orientation}&token={response.token}");
 
     }
 

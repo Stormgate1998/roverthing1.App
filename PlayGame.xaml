@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="roverthing1.PlayGame"
+             Title="PlayGame">
+    <VerticalStackLayout>
+        <Label 
+            Text="{Binding Orientation}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Grid Padding="10"
+                  RowDefinitions="*"
+                  ColumnDefinitions="*,*,*"
+                  ColumnSpacing="10">
+
+            <Button
+                Text="↑"
+                 Grid.Row="0"
+                 Grid.Column="1"
+                Command="{Binding ReverseCommand}"/>
+            <Button
+                Text="←" 
+                 Grid.Row="1"
+                 Grid.Column="0"
+                Command="{Binding LeftCommand}"/>
+            <Button
+                Text="→"
+                 Grid.Row="1"
+                 Grid.Column="2"
+                Command="{Binding RightCommand}"/>
+            <Button
+                Text="↓"
+                 Grid.Row="2"
+                Grid.Column="1"
+                Command="{Binding ForwardCommand}"/>
+
+        </Grid>
+    </VerticalStackLayout>
+</ContentPage>
