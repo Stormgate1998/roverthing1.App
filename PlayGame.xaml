@@ -10,7 +10,7 @@
             HorizontalOptions="Center" />
 
         <Grid Padding="10"
-                  RowDefinitions="*"
+                  RowDefinitions="*,*,*"
                   ColumnDefinitions="*,*,*"
                   ColumnSpacing="10">
 

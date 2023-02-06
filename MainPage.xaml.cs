@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Net.Http.Formatting;
 
 
 namespace roverthing1;
@@ -27,10 +28,13 @@ public partial class JoinViewModel : ObservableObject
     private readonly INavigationService navigation;
 
     private readonly HttpClient client;
-    public JoinViewModel(INavigationService navigation, HttpClient _client)
+    public JoinViewModel(INavigationService navigation)
     {
         this.navigation= navigation;
-        this.client = _client;
+        client = new HttpClient
+        {
+            BaseAddress = new Uri("https://snow-rover.azurewebsites.net/")
+        };
     }
 
     [ObservableProperty]
@@ -48,20 +52,11 @@ public partial class JoinViewModel : ObservableObject
     [RelayCommand]
     public async Task EnterData()
     {
-        JoinObject response = new JoinObject();
-        try
-        {
-            response = await client.GetAsync($"http://snow-rover-pr-7.azurewebsites.net/Game/Join?gameId={Gameid}&name={Name}");
-            token = response.token;
-            
-        }
-        catch (HttpRequestException e)
-        {
-            Console.WriteLine("\nException Caught!");
-            Console.WriteLine("Message :{0} ", e.Message);
-        }
+       var response = await client.GetAsync($"Game/Join?gameId={Gameid}&name={Name}");
+        var joinObject = await response.Content.ReadAsAsync<JoinObject>();
+        token = joinObject.token;
 
-        await navigation.NavigateToAsync($"{nameof(PlayGame)}?orientation={response.orientation}&token={response.token}");
+        await navigation.NavigateToAsync($"{nameof(PlayGame)}?orientation={joinObject.orientation}&token={token}");
 
     }
 
@@ -79,10 +74,7 @@ public class JoinObject
     public Lowresolutionmap[] lowResolutionMap { get; set; }
     public string orientation { get; set; }
 
-    public static implicit operator JoinObject(HttpResponseMessage v)
-    {
-        throw new NotImplementedException();
-    }
+    
 }
 
 public class Neighbor

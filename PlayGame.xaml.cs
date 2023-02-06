@@ -6,9 +6,10 @@ namespace roverthing1;
 
 public partial class PlayGame : ContentPage
 {
-    public PlayGame()
+    public PlayGame(PlayGameViewModel model)
     {
         InitializeComponent();
+        BindingContext= model;
     }
 }
 
@@ -18,9 +19,12 @@ public partial class PlayGameViewModel : ObservableObject
 {
     private readonly HttpClient client;
 
-    public PlayGameViewModel(HttpClient client)
+    public PlayGameViewModel()
     {
-        this.client = client;
+        client = new HttpClient
+        {
+            BaseAddress = new Uri("https://snow-rover.azurewebsites.net/")
+        };
     }
 
     [ObservableProperty]
@@ -35,7 +39,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"http://snow-rover-pr-7.azurewebsites.net/Game/MovePerseverance?token={Token}&direction=Forward");
+            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Reverse");
             Orientation = nav.orientation;
         }
         catch (Exception e)
@@ -49,7 +53,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"http://snow-rover-pr-7.azurewebsites.net/Game/MovePerseverance?token={Token}&direction=Left");
+            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Left");
             Orientation = nav.orientation;
         }
         catch (Exception e)
@@ -64,7 +68,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"http://snow-rover-pr-7.azurewebsites.net/Game/MovePerseverance?token={Token}&direction=Right");
+            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Right");
             Orientation = nav.orientation;
         }
         catch (Exception e)
@@ -79,7 +83,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"http://snow-rover-pr-7.azurewebsites.net/Game/MovePerseverance?token={Token}&direction=Reverse");
+            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Forward");
             Orientation = nav.orientation;
         }
         catch (Exception e)

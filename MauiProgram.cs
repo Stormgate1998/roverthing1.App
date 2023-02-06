@@ -9,7 +9,7 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
-		builder
+        builder
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
 			{
@@ -20,6 +20,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<JoinViewModel>();
 		builder.Services.AddSingleton<PlayGame>();
 		builder.Services.AddSingleton<PlayGameViewModel>();
+		builder.Services.AddSingleton<INavigationService, NavigationService>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
 
 #if DEBUG
