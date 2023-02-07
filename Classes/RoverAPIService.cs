@@ -102,40 +102,37 @@ namespace roverthing1.Classes
             return parsed;
         }
 
-
-
-        public void MovePerseverence(string token, int destrow, int destcol)
+        public async void MovePerseverence(string token, int moveamount, int direction, DroneMove drone)
         {
-
-        }
-
-        public async void MovePersInterface(string token, int moveamount, int direction, int ingenrow, int ingencol)
-        {
+            if(moveamount > 2)
+            {
+                moveamount = 2;
+            }
             switch (direction)
             {
                 case 1://diagonal up and left
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow - moveamount}&destinationColumn={ingencol + moveamount}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column + moveamount}");
                     break;
                 case 2://diagonal up
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow}&destinationColumn={ingencol + moveamount}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row}&destinationColumn={drone.column + moveamount}");
                     break;
                 case 3://diagonal up and right
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow + moveamount}&destinationColumn={ingencol + moveamount}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column + moveamount}");
                     break;
                 case 4://left
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow - moveamount}&destinationColumn={ingencol}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column}");
                     break;
                 case 5://right
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow + moveamount}&destinationColumn={ingencol}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column}");
                     break;
                 case 6://down and left
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow - moveamount}&destinationColumn={ingencol - moveamount}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column - moveamount}");
                     break;
                 case 7://down
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow}&destinationColumn={ingencol - moveamount}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row}&destinationColumn={drone.column - moveamount}");
                     break;
                 case 8://down and right
-                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={ingenrow + moveamount}&destinationColumn={ingencol - moveamount}");
+                    drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column - moveamount}");
                     break;
                 default:
                     Console.WriteLine("Invalid direction");
