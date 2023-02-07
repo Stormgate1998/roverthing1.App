@@ -32,7 +32,7 @@ namespace roverthing1.ViewModels
         private string orientation;
 
         [ObservableProperty]
-        private string token;
+        private string token1;
 
         private JoinObject joinObj;
 
@@ -41,10 +41,10 @@ namespace roverthing1.ViewModels
 
         public async Task Start()
         {
-            Token = Preferences.Default.Get("token", "invalid");
+            Token1 = Preferences.Default.Get("token", "invalid");
 
             //this should redirect if the response code is bad.
-            if (!(await service.IsValid(Token)))
+            if (!(await service.IsValid(Token1)))
             {
                 Preferences.Default.Set("token", "invalid");
                 await navigation.NavigateToAsync($"{nameof(MainPage)}");
@@ -53,8 +53,8 @@ namespace roverthing1.ViewModels
             string ready = "";
             while (ready != "Playing")
             {
-                ready = await service.GetReady(Token);
-                if (!(await service.IsValid(Token)))
+                ready = await service.GetReady(Token1);
+                if (!(await service.IsValid(Token1)))
                 {
                     Preferences.Default.Set("token", "invalid");
                     await navigation.NavigateToAsync($"{nameof(MainPage)}");
@@ -72,7 +72,7 @@ namespace roverthing1.ViewModels
         {
             try
             {
-                Orientation = await service.MoveAWSD(Token, "North");
+                Orientation = await service.MoveAWSD(Token1, "North");
             }
             catch (Exception e)
             {
@@ -85,7 +85,7 @@ namespace roverthing1.ViewModels
         {
             try
             {
-                Orientation = await service.MoveAWSD(Token, "East");
+                Orientation = await service.MoveAWSD(Token1, "East");
             }
             catch (Exception e)
             {
@@ -99,7 +99,7 @@ namespace roverthing1.ViewModels
         {
             try
             {
-                Orientation = await service.MoveAWSD(Token, "West");
+                Orientation = await service.MoveAWSD(Token1, "West");
             }
             catch (Exception e)
             {
@@ -112,13 +112,15 @@ namespace roverthing1.ViewModels
         {
             try
             {
-                Orientation = await service.MoveAWSD(Token, "South");
+                Orientation = await service.MoveAWSD(Token1, "South");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
+
+
     }
 
     public class Navigation
