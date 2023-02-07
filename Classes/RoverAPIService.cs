@@ -58,6 +58,38 @@ namespace roverthing1.Classes
         }
 
 
+
+        public async Task<string> MoveAWSD(string token, string direction)
+        {
+            string returnedDirection = "";
+
+            switch (direction)
+            {
+                case "North":
+                    direction = "Reverse";
+                    break;
+                case "South":
+                    direction = "Forwards";
+                    break;
+                case "East":
+                    direction = "Left";
+                    break;
+                case "West":
+                    direction = "Right";
+                    break;
+                default:
+                    break;
+            }
+
+            do
+            {
+                returnedDirection = await Movedirection(token, direction);
+            } while (returnedDirection != direction);
+            await Movedirection(token, direction);
+            return returnedDirection;
+        }
+
+
         public async Task<string> GetReady(string token)
         {
 
