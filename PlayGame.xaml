@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="roverthing1.PlayGame"
              Title="PlayGame">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Loaded"
+                                        Command="{Binding StartCommand}" />
+    </ContentPage.Behaviors>
+    
     <VerticalStackLayout>
         <Label 
             Text="{Binding Orientation}"

@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Net.Http.Json;
+using roverthing1.Classes;
+
 namespace roverthing1;
 
 public partial class PlayGame : ContentPage
@@ -13,14 +15,17 @@ public partial class PlayGame : ContentPage
     }
 }
 
-[QueryProperty(nameof(Orientation), "orientation")]
-[QueryProperty(nameof(Token), "token")]
 public partial class PlayGameViewModel : ObservableObject
 {
     private readonly HttpClient client;
+    private readonly INavigationService navigation;
 
-    public PlayGameViewModel()
+    private readonly RoverAPIService service = new RoverAPIService();
+
+    public PlayGameViewModel(INavigationService navigation)
     {
+        this.navigation = navigation;
+
         client = new HttpClient
         {
             BaseAddress = new Uri("https://snow-rover.azurewebsites.net/")
@@ -34,13 +39,27 @@ public partial class PlayGameViewModel : ObservableObject
     private string token;
 
 
+    public async Task Start()
+    {
+        Token = Preferences.Default.Get("token", "invalid");
+        int tokenresponse = 0;
+        
+        //this should redirect if the response code is bad.
+        if (await service.IsValid(Token))
+        {
+            Preferences.Default.Set("token", "invalid");
+            await navigation.NavigateToAsync($"{nameof(MainPage)}");
+
+        }
+    }
+
+
     [RelayCommand]
     public async Task Forward()
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Reverse");
-            Orientation = nav.orientation;
+            Orientation = await service.Movedirection(Token, "Reverse");
         }
         catch (Exception e)
         {
@@ -53,13 +72,13 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Left");
-            Orientation = nav.orientation;
+            Orientation = await service.Movedirection(Token, "Left");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+       
     }
 
 
@@ -68,8 +87,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Right");
-            Orientation = nav.orientation;
+            Orientation = await service.Movedirection(Token, "Right");
         }
         catch (Exception e)
         {
@@ -83,8 +101,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            var nav = await client.GetFromJsonAsync<Navigation>($"Game/MovePerseverance?token={Token}&direction=Forward");
-            Orientation = nav.orientation;
+            Orientation = await service.Movedirection(Token, "Forward");
         }
         catch (Exception e)
         {

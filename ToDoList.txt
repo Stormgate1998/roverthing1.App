@@ -29,22 +29,25 @@ Have a label grid of x size, filled with
 
 Day 1:
 0 pts: advanced turning
-1 pts: persist the token between app restarts  (google maui user preferences, implement it)
-2 pts: invalidate token and force re-join if necessary (Automatic checking, should be 200. If not redirect to login. Or if token is on default, redirect to login)
-2 pts: check if token is current by calling /game/status (see above)
-5 pts: user cannot access map, stats, or FPV pages without a valid token (On start for all pages, get token from user preferences, and test it using above functions. if fails, go to login)
-10 pts: statistics page showing your target coordinate, perseverance coordinates and battery level, ingenuity coordinates and battery level (figure out what api call this data is coming from. Store it and make a page to display it)
+1 pts: persist the token between app restarts  (check)
+2 pts: invalidate token and force re-join if necessary (Automatic checking, should be 200. If not redirect to login. Or if token is on default, redirect to login) (check)
+2 pts: check if token is current by calling /game/status (see above) (check)
+5 pts: user cannot access map, stats, or FPV pages without a valid token (On start for all pages, get token from user preferences, and test it using above functions. if fails, go to login) (done)
+
 
  
 Day 2:
-10 pts: map page showing your location and difficulty of any known cells, or show avg. difficulty of other cells in some other style (e.g. grayed out) (figure out what data I'm getting. from there, figure out how to store it and display it. Hopefully in-class will help
-10 pts: automatically update map page as Ingenuity flies around (see above)
-5 pts: show cells in a 5-cell radius from your location (this might be first person specific. Maybe don't do? Otherwise you have map data 
+10 pts: statistics page showing your target coordinate, perseverance coordinates and battery level, ingenuity coordinates and battery level (figure out what api call this data is coming from. Store it and make a page to display it)
+0 pts move api calls to independent service.
 0 pts: monkeycache map data (use data from previous project
 0 pts: Add controller for Ingenuity
 
 
 Day 3:
+
+10 pts: map page showing your location and difficulty of any known cells, or show avg. difficulty of other cells in some other style (e.g. grayed out) (figure out what data I'm getting. from there, figure out how to store it and display it. Hopefully in-class will help
+10 pts: automatically update map page as Ingenuity flies around (see above)
+5 pts: show cells in a 5-cell radius from your location (this might be first person specific. Maybe don't do? Otherwise you have map data 
 20 pts: ingenuity route planner page: give the user a way to plot a route for the helicopter to follow, (make a list of commands to follow, based on the previous data. Hopefully familiarity with the code will simplify it. Execute commands in order. Use popable list.
 automatically update the map page with the returned high-res terrain data.
 

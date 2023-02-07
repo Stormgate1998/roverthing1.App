@@ -22,6 +22,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<PlayGameViewModel>();
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
+        Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
 
 #if DEBUG
         builder.Logging.AddDebug();
