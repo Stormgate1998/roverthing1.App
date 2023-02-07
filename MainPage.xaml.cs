@@ -11,6 +11,8 @@ using System.Net.Http.Formatting;
 using roverthing1.Classes;
 using MonkeyCache.FileStore;
 
+
+
 namespace roverthing1;
 
 public partial class MainPage : ContentPage
@@ -42,7 +44,7 @@ public partial class JoinViewModel : ObservableObject
        
         if (await service.IsValid(token))
         {
-            await navigation.NavigateToAsync($"{nameof(PlayGame)}");
+            await navigation.NavigateToAsync($"{nameof(roverthing1.PlayGame)}");
         }
         else
         {
@@ -66,11 +68,11 @@ public partial class JoinViewModel : ObservableObject
     [RelayCommand]
     public async Task EnterData()
     {
-        JoinObject joinObject = service.JoinGame(Gameid, Name);
+        JoinObject joinObject = await service.JoinGame(Gameid, Name);
         token = joinObject.token;
         Barrel.Current.Add(key: "JoinObject", data: joinObject, expireIn: TimeSpan.FromHours(1));
         Preferences.Default.Set("token", token);
-        await navigation.NavigateToAsync($"{nameof(PlayGame)}");
+        await navigation.NavigateToAsync($"{nameof(roverthing1.PlayGame)}");
 
     }
 

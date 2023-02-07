@@ -41,7 +41,6 @@ public partial class PlayGameViewModel : ObservableObject
 
     private JoinObject joinObj;
 
-
     [ObservableProperty]
     private bool playingNow = false;
 
@@ -54,18 +53,24 @@ public partial class PlayGameViewModel : ObservableObject
         {
             Preferences.Default.Set("token", "invalid");
             await navigation.NavigateToAsync($"{nameof(MainPage)}");
-
+            PlayingNow = false;
         }
         string ready = "";
         while(ready != "Playing")
         {
             ready = await service.GetReady(Token);
+            if(!(await service.IsValid(Token)))
+            {
+                Preferences.Default.Set("token", "invalid");
+                await navigation.NavigateToAsync($"{nameof(MainPage)}");
+                PlayingNow = false;
+            }
         }
 
         PlayingNow = true;
         joinObj = Barrel.Current.Get<JoinObject>(key: "JoinObject");
+        Orientation = joinObj.orientation;
     }
-
 
     [RelayCommand]
     public async Task Forward()
@@ -94,7 +99,6 @@ public partial class PlayGameViewModel : ObservableObject
        
     }
 
-
     [RelayCommand]
     public async Task Right()
     {
@@ -107,7 +111,6 @@ public partial class PlayGameViewModel : ObservableObject
             Console.WriteLine(e);
         }
     }
-
 
     [RelayCommand]
     public async Task Reverse()
@@ -122,7 +125,6 @@ public partial class PlayGameViewModel : ObservableObject
         }
     }
 }
-
 
 public class Navigation
 {
