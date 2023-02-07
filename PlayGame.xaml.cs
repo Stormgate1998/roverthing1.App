@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Net.Http.Json;
 using roverthing1.Classes;
+using MonkeyCache.FileStore;
 
 namespace roverthing1;
 
@@ -38,19 +39,31 @@ public partial class PlayGameViewModel : ObservableObject
     [ObservableProperty]
     private string token;
 
+    private JoinObject joinObj;
+
+
+    [ObservableProperty]
+    private bool playingNow = false;
 
     public async Task Start()
     {
         Token = Preferences.Default.Get("token", "invalid");
-        int tokenresponse = 0;
         
         //this should redirect if the response code is bad.
-        if (await service.IsValid(Token))
+        if (!(await service.IsValid(Token)))
         {
             Preferences.Default.Set("token", "invalid");
             await navigation.NavigateToAsync($"{nameof(MainPage)}");
 
         }
+        string ready = "";
+        while(ready != "Playing")
+        {
+            ready = await service.GetReady(Token);
+        }
+
+        PlayingNow = true;
+        joinObj = Barrel.Current.Get<JoinObject>(key: "JoinObject");
     }
 
 

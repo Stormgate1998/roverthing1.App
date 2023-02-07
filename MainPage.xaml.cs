@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Net.Http.Formatting;
 using roverthing1.Classes;
+using MonkeyCache.FileStore;
 
 namespace roverthing1;
 
@@ -27,16 +28,11 @@ public partial class JoinViewModel : ObservableObject
 {
     private readonly INavigationService navigation;
 
-    private readonly HttpClient client;
 
     private RoverAPIService service = new RoverAPIService();
     public JoinViewModel(INavigationService navigation)
     {
         this.navigation = navigation;
-        client = new HttpClient
-        {
-            BaseAddress = new Uri("https://snow-rover.azurewebsites.net/")
-        };
     }
 
 
@@ -72,6 +68,7 @@ public partial class JoinViewModel : ObservableObject
     {
         JoinObject joinObject = service.JoinGame(Gameid, Name);
         token = joinObject.token;
+        Barrel.Current.Add(key: "JoinObject", data: joinObject, expireIn: TimeSpan.FromHours(1));
         Preferences.Default.Set("token", token);
         await navigation.NavigateToAsync($"{nameof(PlayGame)}");
 

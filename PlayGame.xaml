@@ -23,22 +23,26 @@
                 Text="↑"
                  Grid.Row="0"
                  Grid.Column="1"
-                Command="{Binding ReverseCommand}"/>
+                Command="{Binding ReverseCommand}"
+                IsVisible="{Binding PlayingNow}"/>
             <Button
                 Text="←" 
                  Grid.Row="1"
                  Grid.Column="0"
-                Command="{Binding LeftCommand}"/>
+                Command="{Binding LeftCommand}"
+                IsVisible="{Binding PlayingNow}"/>
             <Button
                 Text="→"
                  Grid.Row="1"
                  Grid.Column="2"
-                Command="{Binding RightCommand}"/>
+                Command="{Binding RightCommand}"
+                IsVisible="{Binding PlayingNow}"/>
             <Button
                 Text="↓"
                  Grid.Row="2"
                 Grid.Column="1"
-                Command="{Binding ForwardCommand}"/>
+                Command="{Binding ForwardCommand}"
+                IsVisible="{Binding PlayingNow}"/>
 
         </Grid>
     </VerticalStackLayout>

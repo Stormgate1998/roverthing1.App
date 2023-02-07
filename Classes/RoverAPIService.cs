@@ -56,6 +56,15 @@ namespace roverthing1.Classes
                 return null;
             }
         }
+
+
+        public async Task<string> GetReady(string token)
+        {
+
+            var response = await client.GetAsync($"Game/Status?token={token}");
+            var parsed = response.Content.ToString().Trim();
+            return parsed;
+        }
         
         
     }

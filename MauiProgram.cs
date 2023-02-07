@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MonkeyCache.FileStore;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
         Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
+        Barrel.ApplicationId = "offline_sync_data";
 
 #if DEBUG
         builder.Logging.AddDebug();
