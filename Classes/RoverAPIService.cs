@@ -54,8 +54,8 @@ namespace roverthing1.Classes
         {
             if (await IsValid(token))
             {
-                var nav = await client.GetFromJsonAsync<RoverMove>($"Game/MovePerseverance?token={token}&direction={direction}");
-                return nav.orientation;
+                rover = await client.GetFromJsonAsync<RoverMove>($"Game/MovePerseverance?token={token}&direction={direction}");
+                return rover.orientation;
             }
             else
             {
@@ -157,7 +157,7 @@ namespace roverthing1.Classes
             PerseverenceMove move = new PerseverenceMove(token, moveamount, direction);
             dronemoves.Enqueue(move);
         }
-        //using the 
+        //takes things in the queue and runs them.
         public void PersevereQueueRemove()
         {
             if(dronemoves.Count > 0)
@@ -165,6 +165,17 @@ namespace roverthing1.Classes
                 PerseverenceMove move = dronemoves.Dequeue();
                 MovePerseverence(move.token, move.moveamount, move.direction);
             }     
+        }
+
+
+        public DroneMove GetDroneInfo()
+        {
+            return drone;
+        }
+
+        public RoverMove GetRoverInfo()
+        {
+            return rover;
         }
     }
 

@@ -39,6 +39,13 @@ namespace roverthing1.ViewModels
         [ObservableProperty]
         private bool playingNow = false;
 
+
+        [ObservableProperty]
+        private RoverMove rover;
+
+        [ObservableProperty]
+        private DroneMove drone;
+
         public async Task Start()
         {
             Token1 = Preferences.Default.Get("token", "invalid");
@@ -78,6 +85,7 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
+            Drone = service.GetDroneInfo();
         }
 
         [RelayCommand]
@@ -91,7 +99,7 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
-
+            Drone = service.GetDroneInfo();
         }
 
         [RelayCommand]
@@ -105,6 +113,7 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
+            Drone = service.GetDroneInfo();
         }
 
         [RelayCommand]
@@ -118,6 +127,7 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
+            Drone = service.GetDroneInfo();
         }
 
 

@@ -44,7 +44,41 @@
                 Grid.Column="1"
                 Command="{Binding ForwardCommand}"
                 IsVisible="{Binding PlayingNow}"/>
+            
+            
 
+        </Grid>
+
+        <Grid
+             Padding="10"
+                  RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="10">
+            <Label Text="Rover row:"
+                   Grid.Row="0"
+                   Grid.Column="0"/>
+            <Label Text="{Binding Rover.row}"
+                   Grid.Row="0"
+                   Grid.Column="1"/>
+            <Label Text="Rover column:"
+                   Grid.Row="0"
+                   Grid.Column="2"/>
+            <Label Text="{Binding Rover.column}"
+                   Grid.Row="0"
+                   Grid.Column="3"/>
+            
+            <Label Text="Rover battery: "
+                   Grid.Row="1"
+                   Grid.Column="0"/>
+            <Label Text="{Binding Rover.batteryLevel}"
+                   Grid.Row="1"
+                   Grid.Column="1"/>
+            <Label Text="Rover orientation:"
+                   Grid.Row="1"
+                   Grid.Column="2"/>
+            <Label Text="{Binding Rover.orientation}"
+                   Grid.Row="1"
+                   Grid.Column="3"/>
         </Grid>
     </VerticalStackLayout>
 </ContentPage>
