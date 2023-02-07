@@ -72,7 +72,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            Orientation = await service.Movedirection(Token, "Reverse");
+            Orientation = await service.MoveAWSD(Token, "North");
         }
         catch (Exception e)
         {
@@ -85,7 +85,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            Orientation = await service.Movedirection(Token, "Left");
+            Orientation = await service.MoveAWSD(Token, "East");
         }
         catch (Exception e)
         {
@@ -100,7 +100,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            Orientation = await service.Movedirection(Token, "Right");
+            Orientation = await service.MoveAWSD(Token, "West");
         }
         catch (Exception e)
         {
@@ -114,7 +114,7 @@ public partial class PlayGameViewModel : ObservableObject
     {
         try
         {
-            Orientation = await service.Movedirection(Token, "Forward");
+            Orientation = await service.MoveAWSD(Token, "South");
         }
         catch (Exception e)
         {
