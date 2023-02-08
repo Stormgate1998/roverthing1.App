@@ -67,32 +67,13 @@ namespace roverthing1.Classes
         //should move the rover one square in whatever direction is chosen
         public async Task<string> MoveAWSD(string token, string direction)
         {
-            string returnedDirection = "";
-
-            switch (direction)
+            while (rover.orientation != direction)
             {
-                case "North":
-                    direction = "Reverse";
-                    break;
-                case "South":
-                    direction = "Forwards";
-                    break;
-                case "East":
-                    direction = "Left";
-                    break;
-                case "West":
-                    direction = "Right";
-                    break;
-                default:
-                    break;
+                await Movedirection(token, "Left");
             }
 
-            do
-            {
-                returnedDirection = await Movedirection(token, direction);
-            } while (returnedDirection != direction);
-            await Movedirection(token, direction);
-            return returnedDirection;
+            await Movedirection(token,"Forward");
+            return rover.orientation;
         }
 
         //returns the game status 
@@ -102,7 +83,7 @@ namespace roverthing1.Classes
             var parsed = response.Content.ToString().Trim();
             return parsed;
         }
-//give it a token, a number 1 or 2, and a direction 1-8. Diagonals are possible. It will move Perseverence that direction
+        //give it a token, a number 1 or 2, and a direction 1-8. Diagonals are possible. It will move Perseverence that direction
         public async void MovePerseverence(string token, int moveamount, int direction)
         {
             if (moveamount > 2)
@@ -160,11 +141,11 @@ namespace roverthing1.Classes
         //takes things in the queue and runs them.
         public void PersevereQueueRemove()
         {
-            if(dronemoves.Count > 0)
+            if (dronemoves.Count > 0)
             {
                 PerseverenceMove move = dronemoves.Dequeue();
                 MovePerseverence(move.token, move.moveamount, move.direction);
-            }     
+            }
         }
 
 
