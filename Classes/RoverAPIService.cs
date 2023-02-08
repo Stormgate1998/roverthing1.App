@@ -89,7 +89,7 @@ namespace roverthing1.Classes
             return parsed;
         }
         //give it a token, a number 1 or 2, and a direction 1-8. Diagonals are possible. It will move Perseverence that direction
-        public async void MovePerseverence(string token, int moveamount, int direction)
+        public async Task MovePerseverence(string token, int moveamount, int direction)
         {
             if (moveamount > 2)
             {
@@ -144,12 +144,12 @@ namespace roverthing1.Classes
             dronemoves.Enqueue(move);
         }
         //takes things in the queue and runs them.
-        public void PersevereQueueRemove()
+        public async Task PersevereQueueRemove()
         {
-            if (dronemoves.Count > 0)
+            while (dronemoves.Count > 0)
             {
                 PerseverenceMove move = dronemoves.Dequeue();
-                MovePerseverence(move.token, move.moveamount, move.direction);
+                await MovePerseverence(move.token, move.moveamount, move.direction);
             }
         }
 

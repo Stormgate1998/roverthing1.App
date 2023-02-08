@@ -1,7 +1,11 @@
 Problem 1: Start functions not working-why?
 Problem 2: Grid cut off-expand size?
-Problem 3: Fix movement function (can do yourself during lab)
+
 Problem 4: Get drone stuff done. (can probably do in lab- not reccomended, test later)
+	1: Functions done
+	2: Set up button grid for directions
+	3: Set up radio button for magnitude (1, 2)
+	4: Get command parameters set up properly- use google or GPT if needed
 Problem 5: Figure out map. Stay in room and use markers if needed.
 
 

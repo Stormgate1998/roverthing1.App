@@ -10,6 +10,9 @@
     </ContentPage.Behaviors>
     
     <VerticalStackLayout>
+        <ScrollView>
+            <VerticalStackLayout>
+       
         <Label 
             Text="{Binding Orientation}"
             VerticalOptions="Center" 
@@ -79,5 +82,115 @@
                    Grid.Row="1"
                    Grid.Column="3"/>
         </Grid>
+        
+        
+        <!--Put Drone info here. -->
+                <StackLayout RadioButtonGroup.GroupName="DroneMagnitude"
+                             RadioButtonGroup.SelectedValue="{Binding DroneMoveMag}">
+                    <Label Text="How many sqares should the drone go?"/>
+                    <RadioButton Content="1"
+                                 Value="1"
+                                 IsEnabled="{Binding PlayingNow}"/>
+                    <RadioButton Content="2"
+                                 Value="2"
+                                 IsEnabled="{Binding PlayingNow}"/>
+                </StackLayout>
+                
+                <Grid 
+                  RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*,*,"
+                  ColumnSpacing="10">
+                    <Button Text="Up left"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="1" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+
+                    <Button Text="Up"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="2" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Text="Up Right"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="3" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Text="Left"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="4" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Text="Right"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="5" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Text="Down left"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="6" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Text="Down"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="7" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Text="Down right"
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Command="{Binding MoveDronePathCommand}" >
+                        <Button.CommandParameter>
+                            <MultiBinding>
+                                <Binding Path="{Binding DroneMoveMag}" />
+                                <Binding Path="8" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
     </VerticalStackLayout>
 </ContentPage>

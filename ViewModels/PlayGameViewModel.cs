@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MonkeyCache.FileStore;
 using roverthing1.Classes;
+using static UIKit.UIGestureRecognizer;
 
 namespace roverthing1.ViewModels
 {
@@ -44,6 +45,9 @@ namespace roverthing1.ViewModels
 
         [ObservableProperty]
         private DroneMove drone;
+
+        [ObservableProperty]
+        private int droneMoveMag;
 
         public async Task Start()
         {
@@ -124,15 +128,19 @@ namespace roverthing1.ViewModels
         }
 
 
+        [RelayCommand]
+
+        public async Task MoveDronePath(int magnitude, int direction)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, direction);
+        }
+
+        [RelayCommand]
+        public async Task MoveDroneExecute()
+        {
+           await service.PersevereQueueRemove();
+        }
+
     }
 
-    public class Navigation
-    {
-        public int row { get; set; }
-        public int column { get; set; }
-        public int batteryLevel { get; set; }
-        public Neighbor[] neighbors { get; set; }
-        public string message { get; set; }
-        public string orientation { get; set; }
-    }
 }
