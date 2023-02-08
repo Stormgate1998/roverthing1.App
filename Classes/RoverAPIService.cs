@@ -1,5 +1,4 @@
-﻿using CoreImage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
@@ -65,33 +64,39 @@ namespace roverthing1.Classes
 
 
         //should move the rover one square in whatever direction is chosen
+
+        //Reconsider. I have fundamentally misunderstood how this works.
+        /*
+         * It moves forwards for whatever orientation it is in. Same with reverse. Turning only rotates. Rewrite the function accordingly.
+         * 
+         */
         public async Task<string> MoveAWSD(string token, string direction)
         {
             string returnedDirection = "";
-
+            string orientation = "";
             switch (direction)
             {
                 case "North":
-                    direction = "Reverse";
+                    orientation = "Reverse";
                     break;
                 case "South":
-                    direction = "Forwards";
+                    orientation = "Forwards";
                     break;
                 case "East":
-                    direction = "Left";
+                    orientation = "Left";
                     break;
                 case "West":
-                    direction = "Right";
+                    orientation = "Right";
                     break;
                 default:
                     break;
             }
 
-            do
+            while (returnedDirection != direction) 
             {
-                returnedDirection = await Movedirection(token, direction);
-            } while (returnedDirection != direction);
-            await Movedirection(token, direction);
+                returnedDirection = await Movedirection(token, orientation);
+            }
+            await Movedirection(token, orientation);
             return returnedDirection;
         }
 

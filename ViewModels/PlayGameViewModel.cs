@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MonkeyCache.FileStore;
 using roverthing1.Classes;
-using static UIKit.UIGestureRecognizer;
 
 namespace roverthing1.ViewModels
 {
@@ -37,7 +36,7 @@ namespace roverthing1.ViewModels
         private JoinObject joinObj;
 
         [ObservableProperty]
-        private bool playingNow = false;
+        private bool playingNow = true;
 
 
         [ObservableProperty]
@@ -58,16 +57,6 @@ namespace roverthing1.ViewModels
                 PlayingNow = false;
             }
             string ready = "";
-            while (ready != "Playing")
-            {
-                ready = await service.GetReady(Token1);
-                if (!(await service.IsValid(Token1)))
-                {
-                    Preferences.Default.Set("token", "invalid");
-                    await navigation.NavigateToAsync($"{nameof(MainPage)}");
-                    PlayingNow = false;
-                }
-            }
 
             PlayingNow = true;
             joinObj = Barrel.Current.Get<JoinObject>(key: "JoinObject");
@@ -77,6 +66,7 @@ namespace roverthing1.ViewModels
         [RelayCommand]
         public async Task Forward()
         {
+            Token1 = Preferences.Default.Get("token", "invalid");
             try
             {
                 Orientation = await service.MoveAWSD(Token1, "North");
@@ -85,12 +75,13 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
-            Drone = service.GetDroneInfo();
+            Rover = service.GetRoverInfo();
         }
 
         [RelayCommand]
         public async Task Left()
         {
+            Token1 = Preferences.Default.Get("token", "invalid");
             try
             {
                 Orientation = await service.MoveAWSD(Token1, "East");
@@ -99,12 +90,13 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
-            Drone = service.GetDroneInfo();
+            Rover = service.GetRoverInfo();
         }
 
         [RelayCommand]
         public async Task Right()
         {
+            Token1 = Preferences.Default.Get("token", "invalid");
             try
             {
                 Orientation = await service.MoveAWSD(Token1, "West");
@@ -113,12 +105,13 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
-            Drone = service.GetDroneInfo();
+            Rover = service.GetRoverInfo();
         }
 
         [RelayCommand]
         public async Task Reverse()
         {
+            Token1 = Preferences.Default.Get("token", "invalid");
             try
             {
                 Orientation = await service.MoveAWSD(Token1, "South");
@@ -127,7 +120,7 @@ namespace roverthing1.ViewModels
             {
                 Console.WriteLine(e);
             }
-            Drone = service.GetDroneInfo();
+            Rover = service.GetRoverInfo();
         }
 
 
