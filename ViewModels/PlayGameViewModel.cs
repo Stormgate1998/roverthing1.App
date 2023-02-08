@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MonkeyCache.FileStore;
 using roverthing1.Classes;
-using static UIKit.UIGestureRecognizer;
 
 namespace roverthing1.ViewModels
 {
@@ -34,6 +33,7 @@ namespace roverthing1.ViewModels
         [ObservableProperty]
         private string token1;
 
+        [ObservableProperty]
         private JoinObject joinObj;
 
         [ObservableProperty]
@@ -41,14 +41,15 @@ namespace roverthing1.ViewModels
 
 
         [ObservableProperty]
-        private RoverMove rover;
+        private RoverMove rover = new RoverMove();
 
         [ObservableProperty]
-        private DroneMove drone;
+        private DroneMove drone = new DroneMove();
 
         [ObservableProperty]
         private int droneMoveMag;
 
+        [RelayCommand]
         public async Task Start()
         {
             Token1 = Preferences.Default.Get("token", "invalid");
@@ -60,62 +61,38 @@ namespace roverthing1.ViewModels
                 await navigation.NavigateToAsync($"{nameof(MainPage)}");
                 PlayingNow = false;
             }
-            string ready = "";
 
             PlayingNow = true;
-            joinObj = Barrel.Current.Get<JoinObject>(key: "JoinObject");
+            JoinObj = Barrel.Current.Get<JoinObject>(key: "JoinObject");
             Orientation = joinObj.orientation;
+
+            Rover.row = JoinObj.startingRow;
+            Rover.column = JoinObj.startingColumn;
+            Rover.orientation = JoinObj.orientation;
+            DroneMoveMag = 1;
+
+            var rovercach = Barrel.Current.Get<RoverMove>(key: "Rover");
+            if (rovercach != null)
+            {
+                Rover = rovercach;
+            }
+
+            var dronecach = Barrel.Current.Get<DroneMove>(key: "Drone");
+            if(dronecach != null)
+            {
+                Drone = dronecach;
+            }
+            else
+            {
+                Drone.row = JoinObj.startingRow;
+                Drone.column = JoinObj.startingColumn;
+            }
         }
 
         [RelayCommand]
         public async Task Forward()
         {
-            Token1 = Preferences.Default.Get("token", "invalid");
-            try
-            {
-                Orientation = await service.MoveAWSD(Token1, "North");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            Rover = service.GetRoverInfo();
-        }
-
-        [RelayCommand]
-        public async Task Left()
-        {
-            Token1 = Preferences.Default.Get("token", "invalid");
-            try
-            {
-                Orientation = await service.MoveAWSD(Token1, "East");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            Rover = service.GetRoverInfo();
-        }
-
-        [RelayCommand]
-        public async Task Right()
-        {
-            Token1 = Preferences.Default.Get("token", "invalid");
-            try
-            {
-                Orientation = await service.MoveAWSD(Token1, "West");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            Rover = service.GetRoverInfo();
-        }
-
-        [RelayCommand]
-        public async Task Reverse()
-        {
-            Token1 = Preferences.Default.Get("token", "invalid");
+           // Token1 = Preferences.Default.Get("token", "invalid");
             try
             {
                 Orientation = await service.MoveAWSD(Token1, "South");
@@ -125,20 +102,106 @@ namespace roverthing1.ViewModels
                 Console.WriteLine(e);
             }
             Rover = service.GetRoverInfo();
+            Barrel.Current.Add(key: "Rover", data: Rover, expireIn: TimeSpan.FromHours(1));
+
+        }
+
+        [RelayCommand]
+        public async Task Left()
+        {
+           // Token1 = Preferences.Default.Get("token", "invalid");
+            try
+            {
+                Orientation = await service.MoveAWSD(Token1, "West");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            Rover = service.GetRoverInfo();
+            Barrel.Current.Add(key: "Rover", data: Rover, expireIn: TimeSpan.FromHours(1));
+        }
+
+        [RelayCommand]
+        public async Task Right()
+        {
+           // Token1 = Preferences.Default.Get("token", "invalid");
+            try
+            {
+                Orientation = await service.MoveAWSD(Token1, "East");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            Rover = service.GetRoverInfo();
+            Barrel.Current.Add(key: "Rover", data: Rover, expireIn: TimeSpan.FromHours(1));
+        }
+
+        [RelayCommand]
+        public async Task Reverse()
+        {
+           //Token1 = Preferences.Default.Get("token", "invalid");
+            try
+            {
+                Orientation = await service.MoveAWSD(Token1, "North");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            Rover = service.GetRoverInfo();
+            Barrel.Current.Add(key: "Rover", data: Rover, expireIn: TimeSpan.FromHours(1));
         }
 
 
         [RelayCommand]
-
-        public async Task MoveDronePath(int magnitude, int direction)
+        public async Task MoveDronePathUL(int magnitude)
         {
-            await service.PersevereQueueAdd(Token1, magnitude, direction);
+            await service.PersevereQueueAdd(Token1, magnitude, 1);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathU(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 2);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathUR(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 3);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathL(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 4);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathR(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 5);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathDL(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 6);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathD(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 7);
+        }
+        [RelayCommand]
+        public async Task MoveDronePathDR(int magnitude)
+        {
+            await service.PersevereQueueAdd(Token1, magnitude, 8);
         }
 
         [RelayCommand]
         public async Task MoveDroneExecute()
         {
            await service.PersevereQueueRemove();
+            Drone = service.drone;
+            Barrel.Current.Add(key: "Drone", data: Drone, expireIn: TimeSpan.FromHours(1));
         }
 
     }

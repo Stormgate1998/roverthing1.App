@@ -22,14 +22,14 @@ namespace roverthing1.ViewModels
             this.navigation = navigation;
         }
 
-
+        [RelayCommand]
         public async Task Start()
         {
             token = Preferences.Default.Get("token", "invalid");
 
             if (await service.IsValid(token))
             {
-                await navigation.NavigateToAsync($"{nameof(roverthing1.PlayGame)}");
+                await navigation.NavigateToAsync($"{nameof(PlayGame)}");
             }
             else
             {
@@ -56,7 +56,7 @@ namespace roverthing1.ViewModels
             token = joinObject.token;
             Barrel.Current.Add(key: "JoinObject", data: joinObject, expireIn: TimeSpan.FromHours(1));
             Preferences.Default.Set("token", token);
-            await navigation.NavigateToAsync($"{nameof(roverthing1.PlayGame)}");
+            await navigation.NavigateToAsync($"{nameof(PlayGame)}");
 
         }
 

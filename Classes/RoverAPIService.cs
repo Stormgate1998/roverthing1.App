@@ -23,8 +23,8 @@ namespace roverthing1.Classes
             };
         }
 
-        public RoverMove rover;
-        public DroneMove drone;
+        public RoverMove rover = new RoverMove();
+        public DroneMove drone = new DroneMove();
 
 
         public async Task<JoinObject> JoinGame(string gameid, string name)
@@ -138,7 +138,7 @@ namespace roverthing1.Classes
 
         }
         //adds to the queue of moves for perseverence
-        public void PersevereQueueAdd(string token, int moveamount, int direction)
+        public async Task PersevereQueueAdd(string token, int moveamount, int direction)
         {
             PerseverenceMove move = new PerseverenceMove(token, moveamount, direction);
             dronemoves.Enqueue(move);
