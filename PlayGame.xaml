@@ -50,7 +50,6 @@
         </Grid>
 
         <Grid
-             Padding="10"
                   RowDefinitions="*,*,*"
                   ColumnDefinitions="*,*,*,*"
                   ColumnSpacing="10">

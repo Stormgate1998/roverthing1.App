@@ -1,3 +1,25 @@
+Problem 1: Start functions not working-why?
+Problem 2: Grid cut off-expand size?
+Problem 3: Fix movement function (can do yourself during lab)
+Problem 4: Get drone stuff done. (can probably do in lab- not reccomended, test later)
+Problem 5: Figure out map. Stay in room and use markers if needed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 1 pts: persist the token between app restarts
 2 pts: check if token is current by calling /game/status
 2 pts: invalidate token and force re-join if necessary
