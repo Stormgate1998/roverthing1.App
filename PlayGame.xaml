@@ -103,7 +103,8 @@
                     <Label Text="How many sqares should the drone go?"/>
                     <RadioButton Content="1"
                                  Value="1"
-                                 IsEnabled="{Binding PlayingNow}"/>
+                                 IsEnabled="{Binding PlayingNow}"
+                                 IsChecked="True"/>
                     <RadioButton Content="2"
                                  Value="2"
                                  IsEnabled="{Binding PlayingNow}"/>

@@ -25,6 +25,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<PlayGame>();
 		builder.Services.AddSingleton<PlayGameViewModel>();
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
+		builder.Services.AddSingleton<DronePage>();
+		builder.Services.AddSingleton<DroneViewModel>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
         Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
         Barrel.ApplicationId = "offline_sync_data";

@@ -1,19 +1,35 @@
-Problem 1: Start functions not working-why?
-Problem 2: Grid cut off-expand size?
 
-Problem 4: Get drone stuff done. (can probably do in lab- not reccomended, test later)
-	1: Functions done
-	2: Set up button grid for directions
-	3: Set up radio button for magnitude (1, 2)
-	4: Get command parameters set up properly- use google or GPT if needed
 Problem 5: Figure out map. Stay in room and use markers if needed.
 
 
+Have 2 maps, one for drone and one from rover
+
+Render things in a radius of 10 from rover
+
+Render things more for drone- check drone radius
 
 
 
+Make a 2D array from list, have it include everything. Storage is cheap. Don't render everything though.
 
 
+
+Separate drone and rover pages
+
+
+Make a 2d-array of tuples? something with 2 values: int difficulty, bool lowres.
+
+If they're lowres and in neighbors for either drone or rover, change bool and update. else, leave as is.
+
+Make functions for drone and rover in API service. Whenever any move is made, take the neighbors and the map and update it
+in viewmodels, update map for every move. 
+
+Figure out how to color code them.
+
+
+In display, either make all the labels and individually link them, or figure out a collection view or something to do it. 
+Either way, have the labels display the difficulty. 
+Hardest part will be color coding. 
 
 
 
@@ -54,19 +70,19 @@ Have a label grid of x size, filled with
 
 
 Day 1:
-0 pts: advanced turning
+0 pts: advanced turning (DONE)
 1 pts: persist the token between app restarts  (check)
 2 pts: invalidate token and force re-join if necessary (Automatic checking, should be 200. If not redirect to login. Or if token is on default, redirect to login) (check)
 2 pts: check if token is current by calling /game/status (see above) (check)
-5 pts: user cannot access map, stats, or FPV pages without a valid token (On start for all pages, get token from user preferences, and test it using above functions. if fails, go to login) (done)
+5 pts: user cannot access map, stats, or FPV pages without a valid token (On start for all pages, get token from user preferences, and test it using above functions. if fails, go to login)
 
 
  
 Day 2:
-10 pts: statistics page showing your target coordinate, perseverance coordinates and battery level, ingenuity coordinates and battery level (figure out what api call this data is coming from. Store it and make a page to display it)
-0 pts move api calls to independent service.
-0 pts: monkeycache map data (use data from previous project
-0 pts: Add controller for Ingenuity
+10 pts: statistics page showing your target coordinate, perseverance coordinates and battery level, ingenuity coordinates and battery level
+0 pts move api calls to independent service. (Done)
+0 pts: monkeycache map data (use data from previous project (done)
+0 pts: Add controller for Ingenuity (done)
 
 
 Day 3:
@@ -75,6 +91,32 @@ Day 3:
 10 pts: automatically update map page as Ingenuity flies around (see above)
 5 pts: show cells in a 5-cell radius from your location (this might be first person specific. Maybe don't do? Otherwise you have map data 
 20 pts: ingenuity route planner page: give the user a way to plot a route for the helicopter to follow, (make a list of commands to follow, based on the previous data. Hopefully familiarity with the code will simplify it. Execute commands in order. Use popable list.
-automatically update the map page with the returned high-res terrain data.
+automatically update the map page with the returned high-res terrain data. (Mostly done, waiting for map)
 
 Day 4: Polish and styling
+
+
+
+
+
+
+
+
+
+make a drone map and a rover map
+
+make a data type Cell that has a string background color, bool discovered, int difficulty
+
+have them in a radius configuration.
+
+
+
+
+In API service:
+
+
+make the Map, with all the cells
+drone map is only within a certain radius
+rover map is smaller radius
+
+drone map doesn't describe difficulty, only numbers

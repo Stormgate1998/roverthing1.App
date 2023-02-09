@@ -13,6 +13,9 @@ namespace roverthing1.Classes
     {
         private readonly HttpClient client;
 
+        private JoinObject joinobject;
+
+        public Cell[,] map;
 
         public Queue<PerseverenceMove> dronemoves = new Queue<PerseverenceMove>();
         public RoverAPIService()
@@ -30,8 +33,11 @@ namespace roverthing1.Classes
         public async Task<JoinObject> JoinGame(string gameid, string name)
         {
             var response = await client.GetAsync($"Game/Join?gameId={gameid}&name={name}");
-            var joinobj = await response.Content.ReadAsAsync<JoinObject>();
-            return joinobj;
+            joinobject = await response.Content.ReadAsAsync<JoinObject>();
+            map = CreateMap(joinobject.lowResolutionMap);
+            FillMapArray(map, joinobject.lowResolutionMap);
+            UpdateCellDifficulty(map, joinobject.neighbors);
+            return joinobject;
         }
 
 
@@ -61,6 +67,7 @@ namespace roverthing1.Classes
                 return null;
             }
         }
+
 
 
         //should move the rover one square in whatever direction is chosen
@@ -163,6 +170,71 @@ namespace roverthing1.Classes
         {
             return rover;
         }
+
+
+        public Cell[,] CreateMap(Lowresolutionmap[] maps)
+        {
+            int maxRow = 0;
+            int maxColumn = 0;
+            foreach (var map in maps)
+            {
+                if (map.upperRightRow > maxRow)
+                    maxRow = map.upperRightRow;
+                if (map.upperRightColumn > maxColumn)
+                    maxColumn = map.upperRightColumn;
+            }
+
+            Cell[,] mapArray = new Cell[maxRow, maxColumn];
+            foreach (var map in maps)
+            {
+                for (int i = map.lowerLeftRow; i <= map.upperRightRow; i++)
+                {
+                    for (int j = map.lowerLeftColumn; j <= map.upperRightColumn; j++)
+                    {
+                        mapArray[i, j].difficulty = map.averageDifficulty;
+                        mapArray[i, j].isdiscovered = false;
+                        mapArray[i, j].color = null;
+                    }
+                }
+            }
+
+            return mapArray;
+        }
+
+        public void FillMapArray(Cell[,] mapArray, Lowresolutionmap[] maps)
+        {
+            foreach (var map in maps)
+            {
+                for (int i = map.lowerLeftRow; i <= map.upperRightRow; i++)
+                {
+                    for (int j = map.lowerLeftColumn; j <= map.upperRightColumn; j++)
+                    {
+                        mapArray[i, j].difficulty = map.averageDifficulty;
+                        mapArray[i, j].isdiscovered = false;
+                        mapArray[i, j].color = null;
+                    }
+                }
+            }
+        }
+        public void UpdateCellDifficulty(Cell[,] mapArray, Neighbor[] neighbors)
+        {
+            foreach (var neighbor in neighbors)
+            {
+                mapArray[neighbor.row, neighbor.column].difficulty = neighbor.difficulty;
+                mapArray[neighbor.row, neighbor.column].isdiscovered = true;
+            }
+        }
+
+
+        public void UpdateMap(RoverMove move)
+        {
+            UpdateCellDifficulty(map, move.neighbors);
+        }
+
+        public void UpdateMap(DroneMove move)
+        {
+            UpdateCellDifficulty(map, move.neighbors);
+        }
     }
 
     public class PerseverenceMove
@@ -176,6 +248,13 @@ namespace roverthing1.Classes
             this.direction = direction;
             this.token = token;
         }
+    }
+
+    public struct Cell
+    {
+        public int difficulty;
+        public bool isdiscovered;
+        public string? color;
     }
 
     public class JoinObject
