@@ -1,4 +1,5 @@
-﻿using Microsoft.Maui.ApplicationModel;
+﻿using MetalPerformanceShaders;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Graphics;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,8 @@ namespace roverthing1.Classes
             joinobject = await response.Content.ReadAsAsync<JoinObject>();
             map = CreateMap(joinobject.lowResolutionMap);
             UpdateMapCellDifficulty(map, joinobject.neighbors);
+            AssignUnDiscoveredMapCellColor(map);
+            AssignDiscoveredMapCellColor(map);
             return joinobject;
         }
 
@@ -63,6 +66,7 @@ namespace roverthing1.Classes
             if (await IsValid(token))
             {
                 rover = await client.GetFromJsonAsync<RoverMove>($"Game/MovePerseverance?token={token}&direction={direction}");
+                UpdateMap(rover);
                 return rover.orientation;
             }
             else
@@ -135,6 +139,7 @@ namespace roverthing1.Classes
                     Console.WriteLine("Invalid direction");
                     break;
             }
+            UpdateMap(drone);
 
         }
         //adds to the queue of moves for perseverence
@@ -212,18 +217,19 @@ namespace roverthing1.Classes
         public void UpdateMap(RoverMove move)
         {
             UpdateMapCellDifficulty(map, move.neighbors);
+            AssignDiscoveredMapCellColor(map);
         }
 
         public void UpdateMap(DroneMove move)
         {
             UpdateMapCellDifficulty(map, move.neighbors);
+            AssignDiscoveredMapCellColor(map);
         }
 
 
         public static void AssignUnDiscoveredMapCellColor(Dictionary<string, MapCell> cells)
         {
             int interval = 20;
-            int maxDifficulty = 150;
             var keys = cells.Keys.ToList();
             foreach (var key in keys)
             {
@@ -242,8 +248,6 @@ namespace roverthing1.Classes
         public static void AssignDiscoveredMapCellColor(Dictionary<string, MapCell> cells)
         {
             int interval = 20;
-            int maxDifficulty = 150;
-
             var keys = cells.Keys.ToList();
             foreach (var key in keys)
             {
@@ -345,14 +349,19 @@ namespace roverthing1.Classes
 
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
-            //x, y, width(1), height(1)
-            //take code from map foreach loop
-            //get first number, then second number. This is x and y.
-            //canvas.StrokeColor = cell.color;
-            //canvas.strokesize=2
-            //draw rectangle using keys for x and y.
-            //figure out how to add to xaml
-            canvas.DrawRectangle(1, 1, dirtyRect.Width, dirtyRect.Height);
+            var keys = cells.Keys.ToList();
+            foreach (var key in keys)
+            {
+                string[] parts = key.Split(',');
+                int row = int.Parse(parts[0]);
+                int column = int.Parse(parts[1]);
+
+                MapCell cell = cells[key];
+                canvas.StrokeColor= cell.color;
+                canvas.FillColor= cell.color;
+                canvas.StrokeSize = 1;
+                canvas.DrawRectangle(row, column, 1, 1);
+            }
         }
 
     }

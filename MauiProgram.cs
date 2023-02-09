@@ -33,6 +33,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<FullMapViewModel>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
         Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
+		Routing.RegisterRoute(nameof(FullMap), typeof(FullMap));
         Barrel.ApplicationId = "offline_sync_data";
 
 #if DEBUG

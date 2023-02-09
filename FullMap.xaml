@@ -3,11 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="roverthing1.FullMap"
              Title="FullMap">
-    <ContentPage.Resources>
-        <drawable:GraphicsDrawable x:Key="drawable" />
-    </ContentPage.Resources>
+
     <VerticalStackLayout>
-        <GraphicsView Drawable="{StaticResource drawable}"
+        <GraphicsView Drawable="{Binding Drawable}"
                       HeightRequest="300"
                       WidthRequest="400" />
     </VerticalStackLayout>

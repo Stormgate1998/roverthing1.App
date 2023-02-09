@@ -8,19 +8,24 @@ using CommunityToolkit.Mvvm.Input;
 using MonkeyCache.FileStore;
 using System.Xml.Linq;
 using roverthing1.Classes;
+using static UIKit.UIGestureRecognizer;
 
 namespace roverthing1.ViewModels;
 
 public partial class FullMapViewModel : ObservableObject
 {
     [ObservableProperty]
-    private MapCell[,] cells;
+    private Dictionary<string, MapCell> cells;
 
     public RoverAPIService service;
 
+    [ObservableProperty]
+    private GraphicsDrawable drawable;
     public FullMapViewModel(RoverAPIService service)
     {
       this.service = service;
         Cells = service.map;
+        Drawable = new GraphicsDrawable(Cells);
     }
+
 }
