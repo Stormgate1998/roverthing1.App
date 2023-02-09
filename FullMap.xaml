@@ -3,20 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="roverthing1.FullMap"
              Title="FullMap">
+    <ContentPage.Resources>
+        <drawable:GraphicsDrawable x:Key="drawable" />
+    </ContentPage.Resources>
     <VerticalStackLayout>
-        <CollectionView ItemsSource="{Binding Cells}">
-            <CollectionView.LayoutDefinition>
-                <GridLayoutDefinition 
-                    Rows="{Binding Rows}"
-                    Columns="{Binding Columns}" />
-            </CollectionView.LayoutDefinition>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Label 
-                        BackgroundColor="{Binding color}"
-                        Text="{Binding difficulty}" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <GraphicsView Drawable="{StaticResource drawable}"
+                      HeightRequest="300"
+                      WidthRequest="400" />
     </VerticalStackLayout>
 </ContentPage>

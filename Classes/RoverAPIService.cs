@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Graphics;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Color = Microsoft.Maui.Graphics.Color;
 
 namespace roverthing1.Classes
 {
@@ -15,7 +19,7 @@ namespace roverthing1.Classes
 
         private JoinObject joinobject;
 
-        public MapCell[,] map;
+        public Dictionary<string, MapCell> map;
 
         public Queue<PerseverenceMove> dronemoves = new Queue<PerseverenceMove>();
         public RoverAPIService()
@@ -35,7 +39,6 @@ namespace roverthing1.Classes
             var response = await client.GetAsync($"Game/Join?gameId={gameid}&name={name}");
             joinobject = await response.Content.ReadAsAsync<JoinObject>();
             map = CreateMap(joinobject.lowResolutionMap);
-            FillMapArray(map, joinobject.lowResolutionMap);
             UpdateMapCellDifficulty(map, joinobject.neighbors);
             return joinobject;
         }
@@ -84,7 +87,7 @@ namespace roverthing1.Classes
                 await Movedirection(token, "Left");
             }
 
-            await Movedirection(token,"Forward");
+            await Movedirection(token, "Forward");
             return rover.orientation;
         }
 
@@ -161,8 +164,7 @@ namespace roverthing1.Classes
             return rover;
         }
 
-
-        public MapCell[,] CreateMap(Lowresolutionmap[] maps)
+        public Dictionary<string, MapCell> CreateMap(Lowresolutionmap[] maps)
         {
             int maxRow = 0;
             int maxColumn = 0;
@@ -173,46 +175,39 @@ namespace roverthing1.Classes
                 if (map.upperRightColumn > maxColumn)
                     maxColumn = map.upperRightColumn;
             }
-
-            MapCell[,] mapArray = new MapCell[maxRow, maxColumn];
+            Dictionary<string, MapCell> mapDict = new Dictionary<string, MapCell>();
             foreach (var map in maps)
             {
                 for (int i = map.lowerLeftRow; i <= map.upperRightRow; i++)
                 {
                     for (int j = map.lowerLeftColumn; j <= map.upperRightColumn; j++)
                     {
-                        mapArray[i, j].difficulty = map.averageDifficulty;
-                        mapArray[i, j].isdiscovered = false;
+                        MapCell cell = new MapCell();
+                        cell.difficulty = map.averageDifficulty;
+                        cell.isdiscovered = false;
+                        mapDict.Add(i + "," + j, cell);
                     }
                 }
             }
 
-            return mapArray;
+            return mapDict;
+
         }
 
-        public void FillMapArray(MapCell[,] mapArray, Lowresolutionmap[] maps)
+
+
+        public void UpdateMapCellDifficulty(Dictionary<string, MapCell> mapDict, Neighbor[] neighbors)
         {
-            foreach (var map in maps)
-            {
-                for (int i = map.lowerLeftRow; i <= map.upperRightRow; i++)
-                {
-                    for (int j = map.lowerLeftColumn; j <= map.upperRightColumn; j++)
-                    {
-                        mapArray[i, j].difficulty = map.averageDifficulty;
-                        mapArray[i, j].isdiscovered = false;
-                    }
-                }
-            }
-        }
-        public void UpdateMapCellDifficulty(MapCell[,] mapArray, Neighbor[] neighbors)
-        {
+            MapCell cell;
             foreach (var neighbor in neighbors)
             {
-                mapArray[neighbor.row, neighbor.column].difficulty = neighbor.difficulty;
-                mapArray[neighbor.row, neighbor.column].isdiscovered = true;
+                cell = mapDict[$"{neighbor.row},{neighbor.column}"];
+                cell.difficulty = neighbor.difficulty;
+                cell.isdiscovered = true;
+                mapDict[$"{neighbor.row},{neighbor.column}"] = cell;
+
             }
         }
-
 
         public void UpdateMap(RoverMove move)
         {
@@ -225,46 +220,46 @@ namespace roverthing1.Classes
         }
 
 
-        public static void AssignUnDiscoveredMapCellColor(MapCell[,] cells)
+        public static void AssignUnDiscoveredMapCellColor(Dictionary<string, MapCell> cells)
+        {
+            int interval = 20;
+            int maxDifficulty = 150;
+            var keys = cells.Keys.ToList();
+            foreach (var key in keys)
+            {
+                MapCell cell = cells[key];
+                if (!cell.isdiscovered)
+                {
+                    int colorValue = (int)Math.Floor((double)cell.difficulty / interval);
+                    int red = 255 - (colorValue * interval);
+                    int green = red;
+                    int blue = red;
+                    cell.color = Color.FromRgb(red, green, blue);
+                }
+            }
+        }
+
+        public static void AssignDiscoveredMapCellColor(Dictionary<string, MapCell> cells)
         {
             int interval = 20;
             int maxDifficulty = 150;
 
-            for (int i = 0; i < cells.GetLength(0); i++)
+            var keys = cells.Keys.ToList();
+            foreach (var key in keys)
             {
-                for (int j = 0; j < cells.GetLength(1); j++)
+                MapCell cell = cells[key];
+                if (cell.isdiscovered)
                 {
-                    if (!cells[i, j].isdiscovered)
-                    {
-                        int colorValue = (int)Math.Floor((double)cells[i, j].difficulty / interval);
-                        int red = 255 - (colorValue * interval);
-                        int green = red;
-                        int blue = red;
-                        cells[i, j].color = Color.FromRgb(red, green, blue);
-                    }
+                    int colorValue = (int)Math.Floor((double)cell.difficulty / interval);
+                    int red = colorValue * interval;
+                    int green = 255 - (colorValue * interval);
+                    int blue = 0;
+                    cell.color = Color.FromRgb(red, green, blue);
                 }
             }
         }
-        public static void AssignDiscoveredMapCellColor(MapCell[,] cells)
-        {
-            int interval = 20;
-            int maxDifficulty = 150;
 
-            for (int i = 0; i < cells.GetLength(0); i++)
-            {
-                for (int j = 0; j < cells.GetLength(1); j++)
-                {
-                    if (cells[i, j].isdiscovered)
-                    {
-                        int colorValue = (int)Math.Floor((double)cells[i, j].difficulty / interval);
-                        int red = colorValue * interval;
-                        int green = 255 - (colorValue * interval);
-                        int blue = 0;
-                        cells[i, j].color = Color.FromRgb(red, green, blue);
-                    }
-                }
-            }
-        }
+
     }
 
     public class PerseverenceMove
@@ -337,5 +332,30 @@ namespace roverthing1.Classes
         public Neighbor[] neighbors { get; set; }
         public string message { get; set; }
     }
+
+    public class GraphicsDrawable : IDrawable
+    {
+        private Dictionary<string, MapCell> cells;
+
+        public GraphicsDrawable(Dictionary<string, MapCell> cells)
+        {
+            this.cells = cells;
+        }
+
+
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            //x, y, width(1), height(1)
+            //take code from map foreach loop
+            //get first number, then second number. This is x and y.
+            //canvas.StrokeColor = cell.color;
+            //canvas.strokesize=2
+            //draw rectangle using keys for x and y.
+            //figure out how to add to xaml
+            canvas.DrawRectangle(1, 1, dirtyRect.Width, dirtyRect.Height);
+        }
+
+    }
+
 
 }
