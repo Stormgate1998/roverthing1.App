@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using MonkeyCache.FileStore;
+using roverthing1.Classes;
 using roverthing1.ViewModels;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -27,6 +28,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<INavigationService, NavigationService>();
 		builder.Services.AddSingleton<DronePage>();
 		builder.Services.AddSingleton<DroneViewModel>();
+		builder.Services.AddSingleton<RoverAPIService>();
+		builder.Services.AddSingleton<FullMap>();
+		builder.Services.AddSingleton<FullMapViewModel>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
         Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
         Barrel.ApplicationId = "offline_sync_data";

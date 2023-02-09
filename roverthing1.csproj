@@ -57,6 +57,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="FullMap.xaml.cs">
+	    <DependentUpon>FullMap.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="PlayGame.xaml.cs">
 	    <DependentUpon>PlayGame.xaml</DependentUpon>
 	  </Compile>
@@ -64,6 +67,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="DronePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="FullMap.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="PlayGame.xaml">

@@ -15,11 +15,12 @@ namespace roverthing1.ViewModels
         private readonly HttpClient client;
         private readonly INavigationService navigation;
 
-        private readonly RoverAPIService service = new RoverAPIService();
+        private readonly RoverAPIService service;
 
-        public PlayGameViewModel(INavigationService navigation)
+        public PlayGameViewModel(INavigationService navigation, RoverAPIService service)
         {
             this.navigation = navigation;
+            this.service = service;
 
             client = new HttpClient
             {

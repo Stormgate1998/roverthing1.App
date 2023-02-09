@@ -16,10 +16,11 @@ namespace roverthing1.ViewModels
         private readonly INavigationService navigation;
 
 
-        private RoverAPIService service = new RoverAPIService();
-        public JoinViewModel(INavigationService navigation)
+        private RoverAPIService service;
+        public JoinViewModel(INavigationService navigation, RoverAPIService service)
         {
             this.navigation = navigation;
+            this.service = service;
         }
 
         [RelayCommand]

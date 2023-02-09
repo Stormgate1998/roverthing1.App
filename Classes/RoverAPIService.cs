@@ -15,7 +15,7 @@ namespace roverthing1.Classes
 
         private JoinObject joinobject;
 
-        public Cell[,] map;
+        public MapCell[,] map;
 
         public Queue<PerseverenceMove> dronemoves = new Queue<PerseverenceMove>();
         public RoverAPIService()
@@ -36,7 +36,7 @@ namespace roverthing1.Classes
             joinobject = await response.Content.ReadAsAsync<JoinObject>();
             map = CreateMap(joinobject.lowResolutionMap);
             FillMapArray(map, joinobject.lowResolutionMap);
-            UpdateCellDifficulty(map, joinobject.neighbors);
+            UpdateMapCellDifficulty(map, joinobject.neighbors);
             return joinobject;
         }
 
@@ -134,16 +134,6 @@ namespace roverthing1.Classes
             }
 
         }
-
-        public void MapUpdate(RoverMove rover)
-        {
-
-        }
-
-        public void MapUpdate(DroneMove drone)
-        {
-
-        }
         //adds to the queue of moves for perseverence
         public async Task PersevereQueueAdd(string token, int moveamount, int direction)
         {
@@ -172,7 +162,7 @@ namespace roverthing1.Classes
         }
 
 
-        public Cell[,] CreateMap(Lowresolutionmap[] maps)
+        public MapCell[,] CreateMap(Lowresolutionmap[] maps)
         {
             int maxRow = 0;
             int maxColumn = 0;
@@ -184,7 +174,7 @@ namespace roverthing1.Classes
                     maxColumn = map.upperRightColumn;
             }
 
-            Cell[,] mapArray = new Cell[maxRow, maxColumn];
+            MapCell[,] mapArray = new MapCell[maxRow, maxColumn];
             foreach (var map in maps)
             {
                 for (int i = map.lowerLeftRow; i <= map.upperRightRow; i++)
@@ -193,7 +183,6 @@ namespace roverthing1.Classes
                     {
                         mapArray[i, j].difficulty = map.averageDifficulty;
                         mapArray[i, j].isdiscovered = false;
-                        mapArray[i, j].color = null;
                     }
                 }
             }
@@ -201,7 +190,7 @@ namespace roverthing1.Classes
             return mapArray;
         }
 
-        public void FillMapArray(Cell[,] mapArray, Lowresolutionmap[] maps)
+        public void FillMapArray(MapCell[,] mapArray, Lowresolutionmap[] maps)
         {
             foreach (var map in maps)
             {
@@ -211,12 +200,11 @@ namespace roverthing1.Classes
                     {
                         mapArray[i, j].difficulty = map.averageDifficulty;
                         mapArray[i, j].isdiscovered = false;
-                        mapArray[i, j].color = null;
                     }
                 }
             }
         }
-        public void UpdateCellDifficulty(Cell[,] mapArray, Neighbor[] neighbors)
+        public void UpdateMapCellDifficulty(MapCell[,] mapArray, Neighbor[] neighbors)
         {
             foreach (var neighbor in neighbors)
             {
@@ -228,12 +216,54 @@ namespace roverthing1.Classes
 
         public void UpdateMap(RoverMove move)
         {
-            UpdateCellDifficulty(map, move.neighbors);
+            UpdateMapCellDifficulty(map, move.neighbors);
         }
 
         public void UpdateMap(DroneMove move)
         {
-            UpdateCellDifficulty(map, move.neighbors);
+            UpdateMapCellDifficulty(map, move.neighbors);
+        }
+
+
+        public static void AssignUnDiscoveredMapCellColor(MapCell[,] cells)
+        {
+            int interval = 20;
+            int maxDifficulty = 150;
+
+            for (int i = 0; i < cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < cells.GetLength(1); j++)
+                {
+                    if (!cells[i, j].isdiscovered)
+                    {
+                        int colorValue = (int)Math.Floor((double)cells[i, j].difficulty / interval);
+                        int red = 255 - (colorValue * interval);
+                        int green = red;
+                        int blue = red;
+                        cells[i, j].color = Color.FromRgb(red, green, blue);
+                    }
+                }
+            }
+        }
+        public static void AssignDiscoveredMapCellColor(MapCell[,] cells)
+        {
+            int interval = 20;
+            int maxDifficulty = 150;
+
+            for (int i = 0; i < cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < cells.GetLength(1); j++)
+                {
+                    if (cells[i, j].isdiscovered)
+                    {
+                        int colorValue = (int)Math.Floor((double)cells[i, j].difficulty / interval);
+                        int red = colorValue * interval;
+                        int green = 255 - (colorValue * interval);
+                        int blue = 0;
+                        cells[i, j].color = Color.FromRgb(red, green, blue);
+                    }
+                }
+            }
         }
     }
 
@@ -250,11 +280,11 @@ namespace roverthing1.Classes
         }
     }
 
-    public struct Cell
+    public struct MapCell
     {
         public int difficulty;
         public bool isdiscovered;
-        public string? color;
+        public Color? color;
     }
 
     public class JoinObject

@@ -105,7 +105,7 @@ Day 4: Polish and styling
 
 make a drone map and a rover map
 
-make a data type Cell that has a string background color, bool discovered, int difficulty
+make a data type MapCell that has a string background color, bool discovered, int difficulty
 
 have them in a radius configuration.
 
@@ -119,4 +119,114 @@ make the Map, with all the cells
 drone map is only within a certain radius
 rover map is smaller radius
 
-drone map doesn't describe difficulty, only numbers
+drone map doesn't describe difficulty,
+
+
+
+
+
+
+public class FullMapViewModel : INotifyPropertyChanged
+{
+    private Cell[,] _cells;
+    public Cell[,] Cells
+    {
+        get { return _cells; }
+        set 
+        {
+            _cells = value;
+            Rows = Cells.GetLength(0);
+            Columns = Cells.GetLength(1);
+            AssignDiscoveredCellColor();
+            OnPropertyChanged();
+        }
+    }
+
+    private int _rows;
+    public int Rows
+    {
+        get { return _rows; }
+        set
+        {
+            _rows = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int _columns;
+    public int Columns
+    {
+        get { return _columns; }
+        set
+        {
+            _columns = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public FullMapViewModel()
+    {
+        // Initialize the Cells property here.
+    }
+
+    private void AssignDiscoveredCellColor()
+    {
+        int rows = Cells.GetLength(0);
+        int columns = Cells.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                Cell cell = Cells[i, j];
+                if (!cell.isdiscovered)
+                {
+                    int gradient = (255 * cell.difficulty) / 150;
+                    cell.color = Color.FromRgb(255 - gradient, 255 - gradient, 255 - gradient);
+                }
+                else
+                {
+                    int gradient = (255 * cell.difficulty) / 150;
+                    cell.color = Color.FromRgb(255, gradient, gradient);
+                }
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="roverthing1.FullMap"
+             Title="FullMap">
+    <VerticalStackLayout>
+        <CollectionView x:Name="CellsCollectionView"
+                        SelectionMode="None">
+            <CollectionView.LayoutDefinition>
+                <GridLayoutDefinition 
+                    Rows="{Binding Rows}"
+                    Columns="{Binding Columns}" />
+            </CollectionView.LayoutDefinition>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label 
+                        BackgroundColor="{Binding color}"
+                        Text="{Binding difficulty}" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
