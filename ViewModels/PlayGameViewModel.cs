@@ -205,6 +205,14 @@ namespace roverthing1.ViewModels
             Barrel.Current.Add(key: "Drone", data: Drone, expireIn: TimeSpan.FromHours(1));
         }
 
+
+        [RelayCommand]
+        public async Task NavigateToMap()
+        {
+            await navigation.NavigateToAsync($"{nameof(FullMap)}");
+        }
+        
+
     }
 
 }

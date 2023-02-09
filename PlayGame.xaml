@@ -12,6 +12,8 @@
     <VerticalStackLayout>
         <ScrollView>
             <VerticalStackLayout>
+                <Button Text="Map"
+                        Command="{Binding NavigateToMapCommand}"/>
 
                 <Label 
             Text="{Binding Orientation}"

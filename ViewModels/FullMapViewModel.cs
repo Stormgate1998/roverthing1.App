@@ -8,7 +8,6 @@ using CommunityToolkit.Mvvm.Input;
 using MonkeyCache.FileStore;
 using System.Xml.Linq;
 using roverthing1.Classes;
-using static UIKit.UIGestureRecognizer;
 
 namespace roverthing1.ViewModels;
 
