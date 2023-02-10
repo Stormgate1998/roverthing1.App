@@ -352,7 +352,7 @@ namespace roverthing1.Classes
                 canvas.StrokeColor= cell.color;
                 canvas.FillColor= cell.color;
                 canvas.StrokeSize = 1;
-                canvas.DrawRectangle(row, column, 1, 1);
+                canvas.DrawRectangle(300-row, 400-column, 1, 1);
             }
         }
 
