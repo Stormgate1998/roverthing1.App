@@ -8,7 +8,7 @@
     </ContentPage.Behaviors>
     <VerticalStackLayout>
         <GraphicsView Drawable="{Binding Drawable}"
-                      HeightRequest="300"
-                      WidthRequest="400" />
+                      HeightRequest="800"
+                      WidthRequest="800" />
     </VerticalStackLayout>
 </ContentPage>

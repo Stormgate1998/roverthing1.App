@@ -68,11 +68,14 @@ namespace roverthing1.ViewModels
             Orientation = JoinObj.orientation;
             service.map = service.CreateMap(JoinObj.lowResolutionMap);
             service.UpdateMapCellDifficulty(service.map, JoinObj.neighbors);
-            RoverAPIService.AssignDiscoveredMapCellColor(service.map);
-            RoverAPIService.AssignUnDiscoveredMapCellColor(service.map);
-            Rover.row = JoinObj.startingRow;
-            Rover.column = JoinObj.startingColumn;
-            Rover.orientation = JoinObj.orientation;
+            if (service.map["3,2"].Equals(null))
+            {
+                
+                Rover.row = JoinObj.startingRow;
+                Rover.column = JoinObj.startingColumn;
+                Rover.orientation = JoinObj.orientation;
+            }
+            
             DroneMoveMag = 1;
 
             var rovercach = Barrel.Current.Get<RoverMove>(key: "Rover");

@@ -40,8 +40,6 @@ namespace roverthing1.Classes
             joinobject = await response.Content.ReadAsAsync<JoinObject>();
             map = CreateMap(joinobject.lowResolutionMap);
             UpdateMapCellDifficulty(map, joinobject.neighbors);
-            AssignUnDiscoveredMapCellColor(map);
-            AssignDiscoveredMapCellColor(map);
             return joinobject;
         }
 
@@ -103,33 +101,41 @@ namespace roverthing1.Classes
             {
                 case 1://diagonal up and left
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column + moveamount}");
+                    UpdateMap(drone);
                     break;
                 case 2://diagonal up
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row}&destinationColumn={drone.column + moveamount}");
+                    UpdateMap(drone);
                     break;
                 case 3://diagonal up and right
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column + moveamount}");
+                    UpdateMap(drone);
                     break;
                 case 4://left
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column}");
+                    UpdateMap(drone);
                     break;
                 case 5://right
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column}");
+                    UpdateMap(drone);
                     break;
                 case 6://down and left
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column - moveamount}");
+                    UpdateMap(drone);
                     break;
                 case 7://down
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row}&destinationColumn={drone.column - moveamount}");
+                    UpdateMap(drone);
                     break;
                 case 8://down and right
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column - moveamount}");
+                    UpdateMap(drone);
                     break;
                 default:
                     Console.WriteLine("Invalid direction");
                     break;
             }
-            UpdateMap(drone);
+            
 
         }
         //adds to the queue of moves for perseverence
@@ -141,10 +147,17 @@ namespace roverthing1.Classes
         //takes things in the queue and runs them.
         public async Task PersevereQueueRemove()
         {
+            var waittimer = 0;
             while (dronemoves.Count > 0)
             {
+                waittimer++;
+                waittimer = waittimer % 5;
                 PerseverenceMove move = dronemoves.Dequeue();
                 await MovePerseverence(move.token, move.moveamount, move.direction);
+                if(waittimer == 4)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
             }
         }
 
@@ -202,7 +215,6 @@ namespace roverthing1.Classes
                 mapDict[$"{neighbor.row},{neighbor.column}"] = cell;
 
             }
-            AssignDiscoveredMapCellColor(map);
         }
 
         public void UpdateMap(RoverMove move)
@@ -217,43 +229,9 @@ namespace roverthing1.Classes
         }
 
 
-        public static void AssignUnDiscoveredMapCellColor(Dictionary<string, MapCell> cells)
-        {
-            int interval = 20;
-            var keys = cells.Keys.ToList();
-            foreach (var key in keys)
-            {
-                MapCell cell = cells[key];
-                if (!cell.isdiscovered)
-                {
-                    int colorValue = (int)Math.Floor((double)cell.difficulty / interval);
-                    int red = 255 - (colorValue * interval);
-                    int green = red;
-                    int blue = red;
-                    cell.color = Color.FromRgb(red, green, blue);
-                    cells[key] = cell;
-                }
-            }
-        }
+        
 
-        public static void AssignDiscoveredMapCellColor(Dictionary<string, MapCell> cells)
-        {
-            int interval = 20;
-            var keys = cells.Keys.ToList();
-            foreach (var key in keys)
-            {
-                MapCell cell = cells[key];
-                if (cell.isdiscovered)
-                {
-                    int colorValue = (int)Math.Floor((double)cell.difficulty / interval);
-                    int red = colorValue * interval;
-                    int green = 255 - (colorValue * interval);
-                    int blue = 0;
-                    cell.color = Color.FromRgb(red, green, blue);
-                    cells[key] = cell;
-                }
-            }
-        }
+        
 
 
     }
@@ -341,6 +319,7 @@ namespace roverthing1.Classes
 
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
+            var interval = 20;
             var keys = cells.Keys.ToList();
             foreach (var key in keys)
             {
@@ -349,10 +328,25 @@ namespace roverthing1.Classes
                 int column = int.Parse(parts[1]);
 
                 MapCell cell = cells[key];
-                canvas.StrokeColor= cell.color;
-                canvas.FillColor= cell.color;
+                if (cell.isdiscovered)
+                {
+                    int colorValue = (int)Math.Floor((double)cell.difficulty / interval);
+                    int red = colorValue * interval;
+                    int green = 255 - (colorValue * interval);
+                    int blue = 0;
+                    canvas.StrokeColor = Color.FromRgb(red, green, blue);
+                    canvas.FillColor = Color.FromRgb(red, green, blue);
+                }else
+                {
+                    int colorValue = (int)Math.Floor((double)cell.difficulty / interval);
+                    int red = 255 - (colorValue * interval);
+                    int green = red;
+                    int blue = red;
+                    canvas.StrokeColor = Color.FromRgb(red, green, blue);
+                    canvas.FillColor = Color.FromRgb(red, green, blue);
+                }
                 canvas.StrokeSize = 1;
-                canvas.DrawRectangle(row, column, 1, 1);
+                canvas.DrawRectangle(500-row, 500-column, 1, 1);
             }
         }
 
