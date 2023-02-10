@@ -74,15 +74,6 @@ namespace roverthing1.Classes
             }
         }
 
-
-
-        //should move the rover one square in whatever direction is chosen
-
-        //Reconsider. I have fundamentally misunderstood how this works.
-        /*
-         * It moves forwards for whatever orientation it is in. Same with reverse. Turning only rotates. Rewrite the function accordingly.
-         * 
-         */
         public async Task<string> MoveAWSD(string token, string direction)
         {
             while (rover.orientation != direction)
@@ -211,18 +202,18 @@ namespace roverthing1.Classes
                 mapDict[$"{neighbor.row},{neighbor.column}"] = cell;
 
             }
+            AssignDiscoveredMapCellColor(map);
         }
 
         public void UpdateMap(RoverMove move)
         {
             UpdateMapCellDifficulty(map, move.neighbors);
-            AssignDiscoveredMapCellColor(map);
+           
         }
 
         public void UpdateMap(DroneMove move)
         {
             UpdateMapCellDifficulty(map, move.neighbors);
-            AssignDiscoveredMapCellColor(map);
         }
 
 
@@ -240,6 +231,7 @@ namespace roverthing1.Classes
                     int green = red;
                     int blue = red;
                     cell.color = Color.FromRgb(red, green, blue);
+                    cells[key] = cell;
                 }
             }
         }
@@ -258,6 +250,7 @@ namespace roverthing1.Classes
                     int green = 255 - (colorValue * interval);
                     int blue = 0;
                     cell.color = Color.FromRgb(red, green, blue);
+                    cells[key] = cell;
                 }
             }
         }

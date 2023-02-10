@@ -49,6 +49,7 @@
                 Grid.Column="1"
                 Command="{Binding ForwardCommand}"
                 IsVisible="{Binding PlayingNow}"/>
+                    
 
 
 
@@ -187,6 +188,10 @@
                 </Grid>
                 <Button Text="Submit Path" 
                         Command="{Binding MoveDroneExecuteCommand}"/>
+
+
+                <Button Text="Invalidate token"
+                        Command="{Binding VoidTokenCommand}"/>
             </VerticalStackLayout>
         </ScrollView>
     </VerticalStackLayout>

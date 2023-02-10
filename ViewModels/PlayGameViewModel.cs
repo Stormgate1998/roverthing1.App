@@ -65,8 +65,11 @@ namespace roverthing1.ViewModels
 
             PlayingNow = true;
             JoinObj = Barrel.Current.Get<JoinObject>(key: "JoinObject");
-            Orientation = joinObj.orientation;
-
+            Orientation = JoinObj.orientation;
+            service.map = service.CreateMap(JoinObj.lowResolutionMap);
+            service.UpdateMapCellDifficulty(service.map, JoinObj.neighbors);
+            RoverAPIService.AssignDiscoveredMapCellColor(service.map);
+            RoverAPIService.AssignUnDiscoveredMapCellColor(service.map);
             Rover.row = JoinObj.startingRow;
             Rover.column = JoinObj.startingColumn;
             Rover.orientation = JoinObj.orientation;
@@ -211,7 +214,15 @@ namespace roverthing1.ViewModels
         {
             await navigation.NavigateToAsync($"{nameof(FullMap)}");
         }
-        
+
+
+        [RelayCommand]
+        public async void VoidToken()
+        {
+            Token1 = "invalid";
+            Preferences.Default.Set("token", "invalid");
+            await navigation.NavigateToAsync($"{nameof(MainPage)}");
+        }
 
     }
 
