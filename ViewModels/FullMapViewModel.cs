@@ -19,12 +19,52 @@ public partial class FullMapViewModel : ObservableObject
     public RoverAPIService service;
 
     [ObservableProperty]
+    private int translationx;
+
+    [ObservableProperty]
+    private int translationy;
+
+    [ObservableProperty]
+    private double scale;
+
+    [ObservableProperty]
     private GraphicsDrawable drawable;
     public FullMapViewModel(RoverAPIService service)
     {
       this.service = service;
         Cells = service.map;
-        Drawable = new GraphicsDrawable(Cells);
+        Drawable = new GraphicsDrawable(Cells, service);
+        Scale = 1;
+        Translationx = 0;
+        Translationy = 0;
+
     }
 
+    [RelayCommand]
+    private async Task ZoomToDrone()
+    {
+        Translationx = 790 + service.drone.row;
+        Translationy = -1541 + (500 - service.drone.column);
+        Scale = 5;
+
+    }
+    [RelayCommand]
+    private async Task ZoomToRover()
+    {
+        Translationx = 790 + service.rover.row;
+        Translationy = -1541 + (500 - service.rover.column);
+        Scale = 5;
+       
+    }
+
+    [RelayCommand]
+    private async Task ZoomOut()
+    {
+        Translationx =0;
+        Translationy = 0;
+        Scale = 1;
+    }
+
+
 }
+

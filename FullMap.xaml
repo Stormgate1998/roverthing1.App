@@ -4,11 +4,34 @@
              x:Class="roverthing1.FullMap"
              Title="FullMap">
     <ContentPage.Behaviors>
-
     </ContentPage.Behaviors>
     <VerticalStackLayout>
-        <GraphicsView Drawable="{Binding Drawable}"
-                      HeightRequest="800"
-                      WidthRequest="800" />
+        <GraphicsView 
+            Drawable="{Binding Drawable}"
+                      HeightRequest="500"
+                      WidthRequest="500" 
+                      TranslationX="{Binding Translationx}"
+                      TranslationY="{Binding Translationy}"
+                      Scale="{Binding Scale}"
+               />
+       
+        <Grid
+        Padding="10"
+                  RowDefinitions="*"
+                  ColumnDefinitions="*,*,*"
+                  ColumnSpacing="10"
+        >
+            <Button Text="Zoom to Drone" Command="{Binding ZoomToDroneCommand}"
+                    Grid.Row="0"
+                 Grid.Column="0"/>
+            <Button Text="Zoom to Rover" Command="{Binding ZoomToRoverCommand}" 
+                    Grid.Row="0"
+                 Grid.Column="1"/>
+            <Button Text="Zoom Out" Command="{Binding ZoomOutCommand}" 
+                    Grid.Row="0"
+                 Grid.Column="2"/>
+        </Grid>
+        
     </VerticalStackLayout>
+ 
 </ContentPage>

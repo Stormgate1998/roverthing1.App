@@ -93,6 +93,7 @@ namespace roverthing1.Classes
         //give it a token, a number 1 or 2, and a direction 1-8. Diagonals are possible. It will move Perseverence that direction
         public async Task MovePerseverence(string token, int moveamount, int direction)
         {
+            int responsecode;
             if (moveamount > 2)
             {
                 moveamount = 2;
@@ -101,41 +102,41 @@ namespace roverthing1.Classes
             {
                 case 1://diagonal up and left
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column + moveamount}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode;
                     break;
                 case 2://diagonal up
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row}&destinationColumn={drone.column + moveamount}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode;
                     break;
                 case 3://diagonal up and right
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column + moveamount}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode;
                     break;
                 case 4://left
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode;
                     break;
                 case 5://right
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode; 
                     break;
                 case 6://down and left
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row - moveamount}&destinationColumn={drone.column - moveamount}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode; 
                     break;
                 case 7://down
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row}&destinationColumn={drone.column - moveamount}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode; 
                     break;
                 case 8://down and right
                     drone = await client.GetFromJsonAsync<DroneMove>($"Game/MoveIngenuity?token={token}&destinationRow={drone.row + moveamount}&destinationColumn={drone.column - moveamount}");
-                    UpdateMap(drone);
+                    responsecode = drone.StatusCode;
                     break;
                 default:
                     Console.WriteLine("Invalid direction");
                     break;
             }
-            
+            UpdateMap(drone);
 
         }
         //adds to the queue of moves for perseverence
@@ -151,12 +152,14 @@ namespace roverthing1.Classes
             while (dronemoves.Count > 0)
             {
                 waittimer++;
-                waittimer = waittimer % 5;
+                waittimer = waittimer % 10;
                 PerseverenceMove move = dronemoves.Dequeue();
-                await MovePerseverence(move.token, move.moveamount, move.direction);
-                if(waittimer == 4)
+               
+                    await MovePerseverence(move.token, move.moveamount, move.direction);
+
+                if(waittimer == 9)
                 {
-                    System.Threading.Thread.Sleep(100);
+                    //System.Threading.Thread.Sleep(500);
                 }
             }
         }
@@ -253,7 +256,6 @@ namespace roverthing1.Classes
     {
         public int difficulty;
         public bool isdiscovered;
-        public Color? color;
     }
 
     public class JoinObject
@@ -295,6 +297,7 @@ namespace roverthing1.Classes
         public Neighbor[] neighbors { get; set; }
         public string message { get; set; }
         public string orientation { get; set; }
+        public int StatusCode { get; set; }
     }
 
 
@@ -305,15 +308,18 @@ namespace roverthing1.Classes
         public int batteryLevel { get; set; }
         public Neighbor[] neighbors { get; set; }
         public string message { get; set; }
+        public int StatusCode { get; set; }
     }
 
     public class GraphicsDrawable : IDrawable
     {
         private Dictionary<string, MapCell> cells;
+        private RoverAPIService service;
 
-        public GraphicsDrawable(Dictionary<string, MapCell> cells)
+        public GraphicsDrawable(Dictionary<string, MapCell> cells, RoverAPIService service)
         {
             this.cells = cells;
+            this.service = service;
         }
 
 
@@ -346,8 +352,14 @@ namespace roverthing1.Classes
                     canvas.FillColor = Color.FromRgb(red, green, blue);
                 }
                 canvas.StrokeSize = 1;
-                canvas.DrawRectangle(300-row, 400-column, 1, 1);
+                canvas.DrawRectangle(row, 500-column, 1, 1);
             }
+            canvas.StrokeColor = Color.FromRgb(0, 0, 255);
+            canvas.FillColor = Color.FromRgb(0, 0, 255);
+            canvas.DrawRectangle(service.drone.row, 500 - service.drone.column, 1, 1);
+            canvas.StrokeColor = Color.FromRgb(0, 0, 0);
+            canvas.FillColor = Color.FromRgb(0, 0, 0);
+            canvas.DrawRectangle(service.rover.row, 500 - service.rover.column, 1, 1);
         }
 
     }
