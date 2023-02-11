@@ -31,9 +31,13 @@ public static class MauiProgram
 		builder.Services.AddSingleton<RoverAPIService>();
 		builder.Services.AddSingleton<FullMap>();
 		builder.Services.AddSingleton<FullMapViewModel>();
+		builder.Services.AddSingleton<StatisticsPageViewModel>();
+		builder.Services.AddSingleton<StatisticsPage>();
         Routing.RegisterRoute(nameof(PlayGame), typeof(PlayGame));
         Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
 		Routing.RegisterRoute(nameof(FullMap), typeof(FullMap));
+        Routing.RegisterRoute(nameof(StatisticsPage), typeof(StatisticsPage));
+		Routing.RegisterRoute(nameof(DronePage), typeof(DronePage));
         Barrel.ApplicationId = "offline_sync_data";
 
 #if DEBUG

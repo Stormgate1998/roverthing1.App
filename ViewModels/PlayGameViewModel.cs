@@ -213,10 +213,27 @@ namespace roverthing1.ViewModels
 
 
         [RelayCommand]
+        public async Task NavigateToRover()
+        {
+            await navigation.NavigateToAsync($"{nameof(PlayGame)}");
+        }
+        [RelayCommand]
+        public async Task NavigateToDrone()
+        {
+            await navigation.NavigateToAsync($"{nameof(DronePage)}");
+        }
+       
+        [RelayCommand]
+        public async Task NavigateToStats()
+        {
+            await navigation.NavigateToAsync($"{nameof(StatisticsPage)}");
+        }
+        [RelayCommand]
         public async Task NavigateToMap()
         {
             await navigation.NavigateToAsync($"{nameof(FullMap)}");
         }
+
 
 
         [RelayCommand]

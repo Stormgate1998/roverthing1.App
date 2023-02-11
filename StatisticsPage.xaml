@@ -3,10 +3,102 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="roverthing1.StatisticsPage"
              Title="StatisticsPage">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Loaded"
+                                        Command="{Binding StartCommand}" />
+    </ContentPage.Behaviors>
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Grid Padding="10"
+                  RowDefinitions="*"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="10">
+            <Button Text="Map"
+                        Command="{Binding NavigateToRoverCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+            <Button Text="Map"
+                        Command="{Binding NavigateToDroneCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+            <Button Text="Map"
+                        Command="{Binding NavigateToMapCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+            <Button Text="Map"
+                        Command="{Binding NavigateToStatsCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+
+        </Grid>
+        <Label Text="Rover Info"/>
+        <Grid
+				 RowDefinitions="*,*,*"
+				 ColumnDefinitions="*,*,*,*"
+				 ColumnSpacing="10"
+				 RowSpacing="10">
+            <Label Text="Rover row:"
+		   Grid.Row="0"
+		   Grid.Column="0"/>
+            <Label Text="{Binding Rover.row}"
+		   Grid.Row="0"
+		   Grid.Column="1"/>
+            <Label Text="Rover column:"
+		   Grid.Row="0"
+		   Grid.Column="2"/>
+            <Label Text="{Binding Rover.column}"
+		   Grid.Row="0"
+		   Grid.Column="3"/>
+
+            <Label Text="Rover battery: "
+		   Grid.Row="1"
+		   Grid.Column="0"/>
+            <Label Text="{Binding Rover.batteryLevel}"
+		   Grid.Row="1"
+		   Grid.Column="1"/>
+            <Label Text="Rover orientation:"
+		   Grid.Row="1"
+		   Grid.Column="2"/>
+            <Label Text="{Binding Rover.orientation}"
+		   Grid.Row="1"
+		   Grid.Column="3"/>
+            <Label Text="Target Row: "
+				   Grid.Row="2"
+				   Grid.Column="0"/>
+            <Label Text="{Binding JoinObj.targetRow}"
+				   Grid.Row="2"
+				   Grid.Column="1"/>
+            <Label Text="Target Column: "
+				   Grid.Row="2"
+				   Grid.Column="2"/>
+            <Label Text="{Binding JoinObj.targetColumn}"
+				   Grid.Row="2"
+				   Grid.Column="3"/>
+        </Grid>
+        <Label Text="Drone Info"/>
+        <Grid
+                  RowDefinitions="*,*"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="10"
+                  RowSpacing="10">
+            <Label Text="Drone row:"
+		   Grid.Row="0"
+		   Grid.Column="0"/>
+            <Label Text="{Binding Drone.row}"
+		   Grid.Row="0"
+		   Grid.Column="1"/>
+            <Label Text="Drone column:"
+		   Grid.Row="0"
+		   Grid.Column="2"/>
+            <Label Text="{Binding Drone.column}"
+		   Grid.Row="0"
+		   Grid.Column="3"/>
+
+            <Label Text="Drone battery: "
+		   Grid.Row="1"
+		   Grid.Column="0"/>
+            <Label Text="{Binding Drone.batteryLevel}"
+		   Grid.Row="1"
+		   Grid.Column="1"/>
+        </Grid>
     </VerticalStackLayout>
 </ContentPage>

@@ -4,9 +4,114 @@
              x:Class="roverthing1.DronePage"
              Title="DronePage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Grid Padding="10"
+                  RowDefinitions="*"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="10">
+            <Button Text="Map"
+                        Command="{Binding NavigateToRoverCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+            <Button Text="Map"
+                        Command="{Binding NavigateToDroneCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+            <Button Text="Map"
+                        Command="{Binding NavigateToMapCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+            <Button Text="Map"
+                        Command="{Binding NavigateToStatsCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+
+        </Grid>
+        <StackLayout RadioButtonGroup.GroupName="DroneMagnitude"
+                             RadioButtonGroup.SelectedValue="{Binding DroneMoveMag}">
+            <Label Text="How many sqares should the drone go?"/>
+            <RadioButton Content="1"
+                                 Value="1"
+                                 IsEnabled="{Binding PlayingNow}"
+                                 IsChecked="True"/>
+            <RadioButton Content="2"
+                                 Value="2"
+                                 IsEnabled="{Binding PlayingNow}"/>
+        </StackLayout>
+
+
+        <Grid
+                  RowDefinitions="*,*"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="10"
+                  RowSpacing="10">
+            <Label Text="Drone row:"
+                   Grid.Row="0"
+                   Grid.Column="0"/>
+            <Label Text="{Binding Drone.row}"
+                   Grid.Row="0"
+                   Grid.Column="1"/>
+            <Label Text="Drone column:"
+                   Grid.Row="0"
+                   Grid.Column="2"/>
+            <Label Text="{Binding Drone.column}"
+                   Grid.Row="0"
+                   Grid.Column="3"/>
+
+            <Label Text="Drone battery: "
+                   Grid.Row="1"
+                   Grid.Column="0"/>
+            <Label Text="{Binding Drone.batteryLevel}"
+                   Grid.Row="1"
+                   Grid.Column="1"/>
+        </Grid>
+        <Grid 
+                  RowDefinitions="*,*,*"
+                  ColumnDefinitions="*,*,*"
+                  ColumnSpacing="10">
+            <Button Text="↖"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Command="{Binding MoveDronePathULCommand}" 
+                            CommandParameter="{Binding DroneMoveMag}"/>
+
+            <Button Text="↑"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Command="{Binding MoveDronePathUCommand}"  
+                        CommandParameter="{Binding DroneMoveMag}"/>
+            <Button Text="↗"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Command="{Binding MoveDronePathURCommand}"  
+                        CommandParameter="{Binding DroneMoveMag}"/>
+            <Button Text="←"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Command="{Binding MoveDronePathLCommand}" 
+                        CommandParameter="{Binding DroneMoveMag}"/>
+            <Button Text="→"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Command="{Binding MoveDronePathRCommand}"  
+                            CommandParameter="{Binding DroneMoveMag}"/>
+            <Button Text="↙"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Command="{Binding MoveDronePathDLCommand}" 
+                            CommandParameter="{Binding DroneMoveMag}"/>
+            <Button Text="↓"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Command="{Binding MoveDronePathDCommand}"  
+                            CommandParameter="{Binding DroneMoveMag}"/>
+
+            <Button Text="↘"
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Command="{Binding MoveDronePathDRCommand}"  
+                            CommandParameter="{Binding DroneMoveMag}"/>
+        </Grid>
+        <Button Text="Submit Path" 
+                        Command="{Binding MoveDroneExecuteCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

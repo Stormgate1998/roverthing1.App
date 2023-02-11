@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MonkeyCache.FileStore;
-using System.Xml.Linq;
 using roverthing1.Classes;
 
 namespace roverthing1.ViewModels;
 
 public partial class FullMapViewModel : ObservableObject
 {
+    private readonly INavigationService navigation;
+
+    [ObservableProperty]
+    private string token1;
+
     [ObservableProperty]
     private Dictionary<string, MapCell> cells;
 
@@ -29,8 +33,9 @@ public partial class FullMapViewModel : ObservableObject
 
     [ObservableProperty]
     private GraphicsDrawable drawable;
-    public FullMapViewModel(RoverAPIService service)
+    public FullMapViewModel(RoverAPIService service, INavigationService navigation)
     {
+        this.navigation = navigation;
       this.service = service;
         Cells = service.map;
         Drawable = new GraphicsDrawable(Cells, service);
@@ -41,18 +46,31 @@ public partial class FullMapViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public async Task Start()
+    {
+        Token1 = Preferences.Default.Get("token", "invalid");
+
+        //this should redirect if the response code is bad.
+        if (!(await service.IsValid(Token1)))
+        {
+            Preferences.Default.Set("token", "invalid");
+            await navigation.NavigateToAsync($"{nameof(MainPage)}");
+        }
+    }
+
+    [RelayCommand]
     private async Task ZoomToDrone()
     {
-        Translationx = 790 + service.drone.row;
-        Translationy = -1541 + (500 - service.drone.column);
-        Scale = 5;
+        Translationy = 790 + service.drone.row;
+        Translationx = -1541 + (500 - service.drone.column);
+        //Scale = 5;
 
     }
     [RelayCommand]
     private async Task ZoomToRover()
     {
-        Translationx = 790 + service.rover.row;
-        Translationy = -1541 + (500 - service.rover.column);
+        Translationy = 790 + service.rover.row;
+        Translationx = -1541 + (500 - service.rover.column);
         Scale = 5;
        
     }
@@ -64,7 +82,27 @@ public partial class FullMapViewModel : ObservableObject
         Translationy = 0;
         Scale = 1;
     }
+    [RelayCommand]
+    public async Task NavigateToRover()
+    {
+        await navigation.NavigateToAsync($"{nameof(PlayGame)}");
+    }
+    [RelayCommand]
+    public async Task NavigateToDrone()
+    {
+        await navigation.NavigateToAsync($"{nameof(DronePage)}");
+    }
 
+    [RelayCommand]
+    public async Task NavigateToStats()
+    {
+        await navigation.NavigateToAsync($"{nameof(StatisticsPage)}");
+    }
+    [RelayCommand]
+    public async Task NavigateToMap()
+    {
+        await navigation.NavigateToAsync($"{nameof(FullMap)}");
+    }
 
 }
 

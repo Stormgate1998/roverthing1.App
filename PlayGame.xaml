@@ -12,8 +12,29 @@
     <VerticalStackLayout>
         <ScrollView>
             <VerticalStackLayout>
-                <Button Text="Map"
-                        Command="{Binding NavigateToMapCommand}"/>
+                <Grid Padding="10"
+                  RowDefinitions="*"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="10">
+                    <Button Text="Map"
+                        Command="{Binding NavigateToRoverCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+                    <Button Text="Map"
+                        Command="{Binding NavigateToDroneCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+                    <Button Text="Map"
+                        Command="{Binding NavigateToMapCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+                    <Button Text="Map"
+                        Command="{Binding NavigateToStatsCommand}"
+                            Grid.Row="0"
+                            Grid.Column="3"/>
+
+                </Grid>
+                    
 
                 <Label 
             Text="{Binding Orientation}"
